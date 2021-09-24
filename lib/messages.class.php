@@ -290,7 +290,7 @@ function say($ph, $level = 0, $member_id = 0, $source = '')
         ));
         return false;
     }
-    
+   
     if (defined('SETTINGS_HOOK_BEFORE_SAY') && SETTINGS_HOOK_BEFORE_SAY != '') {
         eval(SETTINGS_HOOK_BEFORE_SAY);
     }
