@@ -148,42 +148,6 @@ if ($this->filter_name == 'system' && !defined('SETTINGS_SYSTEM_DB_MAIN_SAVE_PER
     }
 }
 
-if ($this->filter_name == 'datafilter' && !defined('SETTINGS_SYSTEM_FILTER_DATA')) {
-    $options = array(
-        'SETTINGS_SYSTEM_FILTER_DATA' => array(
-            'TITLE' => 'Filter incoming data to property',
-			'TYPE' => 'onoff',
-            'DEFAULTVALUE' => 1,
-            'NOTES' => 'Фильтрование входящих данных от устройств'
-        )
-    );
-
-    foreach ($options as $k => $v) {
-        $tmp = SQLSelectOne("SELECT ID FROM settings WHERE NAME LIKE '" . $k . "'");
-        if (!$tmp['ID']) {
-            $tmp = array();
-            $tmp['NAME'] = $k;
-            $tmp['TITLE'] = $v['TITLE'];
-            $tmp['TYPE'] = $v['TYPE'];
-            $tmp['DEFAULTVALUE'] = $v['DEFAULTVALUE'];
-            $tmp['NOTES'] = '';
-            $tmp['DATA'] = '';
-            SQLInsert('settings', $tmp);
-        } else {
-            $tmp = array();
-            $tmp['NAME'] = $k;
-            $tmp['TITLE'] = $v['TITLE'];
-            $tmp['TYPE'] = $v['TYPE'];
-            $tmp['DEFAULTVALUE'] = $v['DEFAULTVALUE'];
-            $tmp['NOTES'] = '';
-            $tmp['DATA'] = '';
-            SQLUpdate('settings', $tmp);			
-		}
-    }
-}
-
-
-
 if ($this->filter_name == 'behavior' ) {
 
     $options = array(
