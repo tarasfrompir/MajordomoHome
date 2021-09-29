@@ -21,7 +21,7 @@ if ($clear_codeeditor) {
 
 
 $sections = array();
-$filters = array('', 'system', 'behavior', 'hook', 'backup', 'scenes', 'calendar', 'codeeditor');
+$filters = array('', 'system', 'systemfilter', 'behavior', 'hook', 'backup', 'scenes', 'calendar', 'codeeditor');
 $total = count($filters);
 for ($i = 0; $i < $total; $i++) {
     $rec = array();
@@ -157,18 +157,6 @@ if ($this->filter_name == 'behavior' ) {
 			'TYPE' => 'text',
             'NOTES' => 'Установить ноль для отключения функции',
         ),
-		'BEHAVIOR_SYSTEM_FILTER_DATA_PROPERTY' => array(
-            'TITLE' => 'Filter incoming data to property',
-			'TYPE' => 'onoff',
-            'DEFAULTVALUE' => 1,
-            'NOTES' => 'Фильтрование входящих данных от устройств'
-        ),
-		'BEHAVIOR_SYSTEM_FILTER_DATA_HYSTORY' => array(
-            'TITLE' => 'Filter hystory values',
-			'TYPE' => 'onoff',
-            'DEFAULTVALUE' => 1,
-            'NOTES' => 'Фильтрование исторических свойств',
-        ),
     );
 
     foreach ($options as $k => $v) {
@@ -177,6 +165,37 @@ if ($this->filter_name == 'behavior' ) {
         $tmp['NAME'] = $k;
         $tmp['TITLE'] = $v['TITLE'];
         $tmp['TYPE'] = 'text';
+        $tmp['DEFAULTVALUE'] = $v['DEFAULTVALUE'];
+        $tmp['NOTES'] = $v['NOTES'];
+        $tmp['DATA'] = '';
+        SQLUpdateInsert('settings', $tmp);			
+    }
+
+}
+
+if ($this->filter_name == 'systemfilter' ) {
+
+    $options = array(
+		'SYSTEMFILTER_PROPERTY' => array(
+            'TITLE' => 'Filtering Objects property',
+			'TYPE' => 'onoff',
+            'DEFAULTVALUE' => 1,
+            'NOTES' => 'Фильтрование входящих данных от устройств в свойстве Обьектов'
+        ),
+		'SYSTEMFILTER_HYSTORY' => array(
+            'TITLE' => 'Filtering hystory Objects property',
+			'TYPE' => 'onoff',
+            'DEFAULTVALUE' => 1,
+            'NOTES' => 'Фильтрование исторических значений в свойстве Обьектов',
+        ),
+    );
+
+    foreach ($options as $k => $v) {
+        $tmp = SQLSelectOne("SELECT ID FROM settings WHERE NAME LIKE '" . $k . "'");
+		if (!$tmp['ID']) $tmp = array();
+        $tmp['NAME'] = $k;
+        $tmp['TITLE'] = $v['TITLE'];
+        $tmp['TYPE'] = $v['TYPE'];
         $tmp['DEFAULTVALUE'] = $v['DEFAULTVALUE'];
         $tmp['NOTES'] = $v['NOTES'];
         $tmp['DATA'] = '';
