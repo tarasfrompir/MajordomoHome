@@ -25,7 +25,9 @@ if (isset($_GET['lang'])) {
 
 
 for ($i = 0; $i < $total; $i++)
-    Define('SETTINGS_' . $settings[$i]['NAME'], $settings[$i]['VALUE']);
+    if (!defined('SETTINGS_' . $settings[$i]['NAME'])) {
+		Define('SETTINGS_' . $settings[$i]['NAME'], $settings[$i]['VALUE']);
+	}
 
 if (!defined('SETTINGS_SITE_LANGUAGE')) {
     Define('SETTINGS_SITE_LANGUAGE', 'en');
