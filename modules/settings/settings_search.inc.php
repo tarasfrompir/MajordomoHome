@@ -176,6 +176,12 @@ if ($this->filter_name == 'behavior' ) {
 if ($this->filter_name == 'systemfilter' ) {
 
     $options = array(
+		'SYSTEMFILTER_METHOD' => array(
+            'TITLE' => 'Run Method when Objects property change ',
+			'TYPE' => 'onoff',
+            'DEFAULTVALUE' => 1,
+            'NOTES' => 'Запуск метода при изменении свойства обьекта (или при получении свойства - если выключено)'
+        ),
 		'SYSTEMFILTER_PROPERTY' => array(
             'TITLE' => 'Filtering Objects property',
 			'TYPE' => 'onoff',
@@ -187,6 +193,18 @@ if ($this->filter_name == 'systemfilter' ) {
 			'TYPE' => 'onoff',
             'DEFAULTVALUE' => 1,
             'NOTES' => 'Фильтрование исторических значений в свойстве Обьектов',
+        ),
+		'SYSTEMFILTER_CACHE' => array(
+            'TITLE' => 'Filtering Objects property in cache',
+			'TYPE' => 'onoff',
+            'DEFAULTVALUE' => 1,
+            'NOTES' => 'Фильтрование входящих данных от устройств в свойстве Обьектов при записи данных в кеш'
+        ),
+		'SYSTEMFILTER_WEBSOCKET' => array(
+            'TITLE' => 'Filtering Objects property when post to websocket',
+			'TYPE' => 'onoff',
+            'DEFAULTVALUE' => 1,
+            'NOTES' => 'Фильтрование входящих данных от устройств в свойстве Обьектов при передачи данных в Вебсокеты'
         ),
     );
 
