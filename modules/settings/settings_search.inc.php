@@ -148,13 +148,13 @@ if ($this->filter_name == 'system' && !defined('SETTINGS_SYSTEM_DB_MAIN_SAVE_PER
     }
 }
 
-if ($this->filter_name == 'behavior' && !defined('SETTINGS_BEHAVIOR_NOBODYHOME_TIMEOUT')) {
-
+if ($this->filter_name == 'datafilter' && !defined('SETTINGS_SYSTEM_FILTER_DATA')) {
     $options = array(
-        'BEHAVIOR_NOBODYHOME_TIMEOUT' => array(
-            'TITLE' => 'NobodyHome mode activation timeout (minutes)',
-            'DEFAULTVALUE' => 60,
-            'NOTES' => 'Set 0 to disable'
+        'SETTINGS_SYSTEM_FILTER_DATA' => array(
+            'TITLE' => 'Filter incoming data to property',
+			'TYPE' => 'onoff',
+            'DEFAULTVALUE' => 1,
+            'NOTES' => 'Фильтрование входящих данных от устройств'
         )
     );
 
@@ -164,12 +164,59 @@ if ($this->filter_name == 'behavior' && !defined('SETTINGS_BEHAVIOR_NOBODYHOME_T
             $tmp = array();
             $tmp['NAME'] = $k;
             $tmp['TITLE'] = $v['TITLE'];
-            $tmp['TYPE'] = 'text';
+            $tmp['TYPE'] = $v['TYPE'];
             $tmp['DEFAULTVALUE'] = $v['DEFAULTVALUE'];
-            $tmp['NOTES'] = $v['NOTES'];
+            $tmp['NOTES'] = '';
             $tmp['DATA'] = '';
             SQLInsert('settings', $tmp);
-        }
+        } else {
+            $tmp = array();
+            $tmp['NAME'] = $k;
+            $tmp['TITLE'] = $v['TITLE'];
+            $tmp['TYPE'] = $v['TYPE'];
+            $tmp['DEFAULTVALUE'] = $v['DEFAULTVALUE'];
+            $tmp['NOTES'] = '';
+            $tmp['DATA'] = '';
+            SQLUpdate('settings', $tmp);			
+		}
+    }
+}
+
+
+
+if ($this->filter_name == 'behavior' ) {
+
+    $options = array(
+        'BEHAVIOR_NOBODYHOME_TIMEOUT' => array(
+            'TITLE' => 'NobodyHome mode activation timeout (minutes)',
+            'DEFAULTVALUE' => 60,
+			'TYPE' => 'text',
+            'NOTES' => 'Установить ноль для отключения функции',
+        ),
+		'BEHAVIOR_SYSTEM_FILTER_DATA_PROPERTY' => array(
+            'TITLE' => 'Filter incoming data to property',
+			'TYPE' => 'onoff',
+            'DEFAULTVALUE' => 1,
+            'NOTES' => 'Фильтрование входящих данных от устройств'
+        ),
+		'BEHAVIOR_SYSTEM_FILTER_DATA_HYSTORY' => array(
+            'TITLE' => 'Filter hystory values',
+			'TYPE' => 'onoff',
+            'DEFAULTVALUE' => 1,
+            'NOTES' => 'Фильтрование исторических свойств',
+        ),
+    );
+
+    foreach ($options as $k => $v) {
+        $tmp = SQLSelectOne("SELECT ID FROM settings WHERE NAME LIKE '" . $k . "'");
+		if (!$tmp['ID']) $tmp = array();
+        $tmp['NAME'] = $k;
+        $tmp['TITLE'] = $v['TITLE'];
+        $tmp['TYPE'] = 'text';
+        $tmp['DEFAULTVALUE'] = $v['DEFAULTVALUE'];
+        $tmp['NOTES'] = $v['NOTES'];
+        $tmp['DATA'] = '';
+        SQLUpdateInsert('settings', $tmp);			
     }
 
 }
