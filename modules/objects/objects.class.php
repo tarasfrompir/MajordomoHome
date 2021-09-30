@@ -814,9 +814,6 @@ class objects extends module
     function setProperty($property, $value, $no_linked = 0, $source = '')
     {
 
-        if (!preg_match('/cycle/is', $property) && function_exists('verbose_log')) {
-            verbose_log('Property [' . $this->object_title . '.' . $property . '] set to \'' . $value . '\'');
-        }
         startMeasure('setProperty');
         startMeasure('setProperty (' . $property . ')');
 
@@ -835,52 +832,6 @@ class objects extends module
         }
         if (!$source && isset($_SERVER['REQUEST_URI'])) {
             $source = urldecode($_SERVER['REQUEST_URI']);
-        }
-        if (strlen($source) > 250) {
-            $source = substr($source, 0, 250) . '...';
-        }
-
-        if (defined('TRACK_DATA_CHANGES') && TRACK_DATA_CHANGES == 1) {
-            $save = 1;
-
-            if (!is_numeric(trim($value))) {
-                $save = 0;
-            }
-
-            if (defined('TRACK_DATA_CHANGES_IGNORE') && TRACK_DATA_CHANGES_IGNORE != '' && $save) {
-                $tmp = explode(',', TRACK_DATA_CHANGES_IGNORE);
-                $total = count($tmp);
-                for ($i = 0; $i < $total; $i++) {
-                    $regex = trim($tmp[$i]);
-                    if (preg_match('/' . $regex . '/is', $this->object_title . '.' . $property)) {
-                        $save = 0;
-                        break;
-                    }
-                }
-            }
-            if ($save) {
-                if ($this->location_id) {
-                    $location = current(SQLSelectOne("SELECT TITLE FROM locations WHERE ID=" . (int)$this->location_id));
-                } else {
-                    $location = '';
-                }
-
-
-                if (defined('SETTINGS_SYSTEM_DEBMES_PATH') && SETTINGS_SYSTEM_DEBMES_PATH != '') {
-                    $path = SETTINGS_SYSTEM_DEBMES_PATH;
-                } else {
-                    $path = ROOT . 'cms/debmes';
-                }
-
-                $today_file = $path . '/' . date('Y-m-d') . '.data';
-                $f = fopen($today_file, "a+");
-                if ($f) {
-                    fputs($f, date("Y-m-d H:i:s"));
-                    fputs($f, "\t" . $this->object_title . '.' . $property . "\t" . trim($value) . "\t" . trim($source) . "\t" . trim($location) . "\n");
-                    fclose($f);
-                    @chmod($today_file, 0666);
-                }
-            }
         }
 
         startMeasure('getPropertyByName');
@@ -1038,18 +989,25 @@ class objects extends module
             }
             endMeasure('linkedModulesProcessing');
         }
-
-        if ($old_value !== $value) {
-            startMeasure('setproperty_postwebsocketqueue');
-            postToWebSocketQueue($this->object_title . '.' . $property, $value);
-            endMeasure('setproperty_postwebsocketqueue');
-            
-            startMeasure('save_to_cache');
-            $cached_name = 'MJD:' . $this->object_title . '.' . $property;
-            saveToCache($cached_name, $value);
-            endMeasure('save_to_cache');
-
-            startMeasure('save_to_phistory');
+		
+		// фильтрование истории
+		if (defined('SETINGS_SYSTEMFILTER_HYSTORY') and (SETINGS_SYSTEMFILTER_HYSTORY == 1 )) {
+			if ($old_value !== $value) {
+				startMeasure('save_to_phistory');
+				if (IsSet($prop['KEEP_HISTORY']) && ($prop['KEEP_HISTORY'] > 0)) {
+					$q_rec = array();
+					$q_rec['VALUE_ID'] = $v['ID'];
+					$q_rec['ADDED'] = date('Y-m-d H:i:s');
+					$q_rec['VALUE'] = $value . '';
+					$q_rec['SOURCE'] = $source . '';
+					$q_rec['OLD_VALUE'] = $old_value;
+					$q_rec['KEEP_HISTORY'] = $prop['KEEP_HISTORY'];
+					SQLInsert('phistory_queue', $q_rec);
+				}
+				endMeasure('save_to_phistory');
+			}
+		} else {
+	        startMeasure('save_to_phistory');
             if (IsSet($prop['KEEP_HISTORY']) && ($prop['KEEP_HISTORY'] > 0)) {
                 $q_rec = array();
                 $q_rec['VALUE_ID'] = $v['ID'];
@@ -1061,23 +1019,54 @@ class objects extends module
                 SQLInsert('phistory_queue', $q_rec);
             }
             endMeasure('save_to_phistory');
-            
-            startMeasure('Call_method_safe');
-            if (isset($prop['ONCHANGE']) && $prop['ONCHANGE']) {
-                global $property_linked_history;
-                if (!$property_linked_history[$this->object_title . '.' . $property][$prop['ONCHANGE']]) {
-                    $property_linked_history[$this->object_title . '.' . $property][$prop['ONCHANGE']] = 1;
-                    $params = array();
-                    $params['PROPERTY'] = $property;
-                    $params['NEW_VALUE'] = (string)$value;
-                    $params['OLD_VALUE'] = (string)$old_value;
-                    $params['SOURCE'] = (string)$source;
-                    $this->raiseEvent($prop['ONCHANGE'], $params);
-                    unset($property_linked_history[$this->object_title . '.' . $property][$prop['ONCHANGE']]);
-                }
-            }
-            endMeasure('Call_method_safe');
-        }
+		}
+		
+		// фильтрование кеша
+		if (defined('SETINGS_SYSTEMFILTER_CACHE') and SETINGS_SYSTEMFILTER_CACHE == 1) {
+			if ($old_value !== $value) {
+				startMeasure('save_to_cache');
+				$cached_name = 'MJD:' . $this->object_title . '.' . $property;
+				saveToCache($cached_name, $value);
+				endMeasure('save_to_cache');
+			}
+		} else {
+            startMeasure('save_to_cache');
+            $cached_name = 'MJD:' . $this->object_title . '.' . $property;
+            saveToCache($cached_name, $value);
+            endMeasure('save_to_cache');
+		}
+		
+		// фильтрование передачи данных в вебсокеты
+		if (defined('SETINGS_SYSTEMFILTER_WEBSOCKET') and SETINGS_SYSTEMFILTER_WEBSOCKET == 1) {
+			if ($old_value !== $value) {
+				startMeasure('setproperty_postwebsocketqueue');
+				postToWebSocketQueue($this->object_title . '.' . $property, $value);
+				endMeasure('setproperty_postwebsocketqueue');
+			}
+		} else {
+            startMeasure('setproperty_postwebsocketqueue');
+            postToWebSocketQueue($this->object_title . '.' . $property, $value);
+            endMeasure('setproperty_postwebsocketqueue');
+		}
+	
+		// запуск метода только по изменению свойств 
+		if ($old_value !== $value) {
+			startMeasure('Call_method_safe');
+			if (isset($prop['ONCHANGE']) && $prop['ONCHANGE']) {
+				global $property_linked_history;
+				if (!$property_linked_history[$this->object_title . '.' . $property][$prop['ONCHANGE']]) {
+					$property_linked_history[$this->object_title . '.' . $property][$prop['ONCHANGE']] = 1;
+					$params = array();
+					$params['PROPERTY'] = $property;
+					$params['NEW_VALUE'] = (string)$value;
+					$params['OLD_VALUE'] = (string)$old_value;
+					$params['SOURCE'] = (string)$source;
+					$this->raiseEvent($prop['ONCHANGE'], $params);
+					unset($property_linked_history[$this->object_title . '.' . $property][$prop['ONCHANGE']]);
+				}
+			}
+			endMeasure('Call_method_safe');
+		}
 
         endMeasure('setProperty (' . $property . ')', 1);
         endMeasure('setProperty', 1);
