@@ -60,8 +60,8 @@ $aditional_git_urls = array(
 );
 
 //Define('WAIT_FOR_MAIN_CYCLE', 1);
-//Define('TRACK_DATA_CHANGES', 1);                                   // TRACK EVENTS
-//Define('TRACK_DATA_CHANGES_IGNORE', 'cycle_, clockchime, uptime, WSClientsTotal'); // IGNORE
+//Define('TRACK_DATA_CHANGES', 1); // TRACK EVENTS // disabled - dont need
+//Define('TRACK_DATA_CHANGES_IGNORE', 'cycle_, clockchime, uptime, WSClientsTotal'); // IGNORE // disabled - dont need
 
 Define('GETURL_WARNING_TIMEOUT', 5); // TIMEOUT LIMIT FOR getURL function warning
 
