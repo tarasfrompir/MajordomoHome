@@ -908,39 +908,41 @@ class objects extends module
                 }
                 if ($value == '') $value = $old_value;
             }
-
-            $v['VALUE'] = $value . '';
-            $v['SOURCE'] = $source . '';
-            if (!$v['PROPERTY_NAME']) {
-                $v['PROPERTY_NAME'] = $this->object_title . '.' . $property;
-            }
-            if ($v['ID']) {
-                $v['UPDATED'] = date('Y-m-d H:i:s');
-                SQLUpdate('pvalues', $v);
-            } else {
-                $v['PROPERTY_ID'] = $id;
-                $v['OBJECT_ID'] = $this->id;
-                $v['VALUE'] = $value . '';
-                $v['SOURCE'] = $source . '';
-                $v['UPDATED'] = date('Y-m-d H:i:s');
-                $v['ID'] = SQLInsert('pvalues', $v);
-            }
-        } else {
-            $prop = array();
-            $prop['OBJECT_ID'] = $this->id;
-            $prop['TITLE'] = $property;
-            $prop['ID'] = SQLInsert('properties', $prop);
-
-            $v['PROPERTY_NAME'] = $this->object_title . '.' . $property;
-            $v['PROPERTY_ID'] = $prop['ID'];
-            $v['OBJECT_ID'] = $this->id;
-            $v['VALUE'] = $value . '';
-            $v['SOURCE'] = $source . '';
-            $v['UPDATED'] = date('Y-m-d H:i:s');
-            $v['ID'] = SQLInsert('pvalues', $v);
-        }
+        } 
+		
+		// фильтрование свойств
+		if (defined('SETINGS_SYSTEMFILTER_PROPERTY') and (SETINGS_SYSTEMFILTER_PROPERTY == 1 )) {
+			if ($old_value !== $value) {
+				if (!$v['ID']) {
+					$v = array();
+					$v['PROPERTY_ID'] = $id;
+					$v['OBJECT_ID'] = $this->id;
+				}
+			    if (!$v['PROPERTY_NAME']) {
+					$v['PROPERTY_NAME'] = $this->object_title . '.' . $property;
+				}
+				$v['VALUE'] = $value . '';
+				$v['SOURCE'] = $source . '';
+				$v['UPDATED'] = date('Y-m-d H:i:s');
+				SQLUpdateInsert('pvalues', $v);
+			}
+		} else {
+			if (!$v['ID']) {
+				$v = array();
+				$v['PROPERTY_ID'] = $id;
+				$v['OBJECT_ID'] = $this->id;
+			}
+		    if (!$v['PROPERTY_NAME']) {
+				$v['PROPERTY_NAME'] = $this->object_title . '.' . $property;
+			}
+			$v['VALUE'] = $value . '';
+			$v['SOURCE'] = $source . '';
+			$v['UPDATED'] = date('Y-m-d H:i:s');
+			SQLUpdateInsert('pvalues', $v);
+		}		
         endMeasure('setproperty_update');
 
+    
         $p_lower = strtolower($property);
         if (!defined('DISABLE_SIMPLE_DEVICES') &&
             isset($this->device_id) &&
