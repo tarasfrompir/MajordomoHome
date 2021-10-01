@@ -176,12 +176,6 @@ if ($this->filter_name == 'behavior' ) {
 if ($this->filter_name == 'systemfilter' ) {
 
     $options = array(
-		'SYSTEMFILTER_METHOD' => array(
-            'TITLE' => 'Run Method when Objects property change ',
-			'TYPE' => 'onoff',
-            'DEFAULTVALUE' => 1,
-            'NOTES' => 'Запуск метода при изменении свойства обьекта (или при получении свойства - если выключено)'
-        ),
 		'SYSTEMFILTER_PROPERTY' => array(
             'TITLE' => 'Filtering Objects property',
 			'TYPE' => 'onoff',
