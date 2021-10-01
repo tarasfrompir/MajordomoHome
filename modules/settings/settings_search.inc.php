@@ -216,7 +216,7 @@ if ($this->filter_name == 'systemfilter' ) {
         $tmp = SQLSelectOne("SELECT ID FROM settings WHERE NAME LIKE '" . $k . "'");
 		if (!$tmp['ID']) {
 			$tmp = array();
-			$tmp['VALUE'] = $v['TYPE'];
+			$tmp['VALUE'] = $v['VALUE'];
 		}
         $tmp['NAME'] = $k;
         $tmp['TITLE'] = $v['TITLE'];
