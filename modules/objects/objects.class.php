@@ -709,27 +709,33 @@ class objects extends module
      */
     function getPropertyByName($name, $class_id, $object_id)
     {
-
-        $cached_name = 'P:' . $class_id . '.' . $object_id . '.' . $name;
-        $cached_value = checkFromCache($cached_name);
+		$name = trim($name);
+        $cached_value = checkFromCache('P:' . $class_id . '.' . $object_id . '.' . $name);
         if ($cached_value !== false) {
             return $cached_value;
         }
 
         $rec = SQLSelectOne("SELECT ID FROM properties WHERE OBJECT_ID='" . (int)$object_id . "' AND TITLE = '" . DBSafe($name) . "'");
         if (isset($rec['ID'])) {
-            saveToCache($cached_name,$rec['ID']);
             return $rec['ID'];
-        }
+		}
         $props = $this->getParentProperties($class_id, '', 1);
         $total = count($props);
         for ($i = 0; $i < $total; $i++) {
             if (strtolower($props[$i]['TITLE']) == strtolower($name)) {
-                saveToCache($cached_name,$props[$i]['ID']);
                 return $props[$i]['ID'];
             }
         }
-        return false;
+        $prop = array();
+        $prop['OBJECT_ID'] = $object_id;
+        $prop['TITLE'] = $property;
+		$prop['KEEP_HISTORY'] = 0;
+		$prop['CLASS_ID'] = $class_id;
+		$prop['DESCRIPTION'] = 'Created by function getPropertyByName';
+		$prop['DATA_KEY'] = 0;
+		$prop['DATA_TYPE'] = 0;
+        $prop['ID'] = SQLInsert('properties', $prop);
+		return $prop['ID'];
     }
 
 
@@ -740,12 +746,11 @@ class objects extends module
      *
      * @access public
      */
-    function getProperty($property, $cache_checked = false)
+    function getProperty($property)
     {
         if (!$this->object_title) return false;
 
         $property = trim($property);
-        $cached_name = 'MJD:' . $this->object_title . '.' . $property;
 
         if ($property == 'object_title') {
             return $this->object_title;
@@ -758,49 +763,38 @@ class objects extends module
         }
 
         if (!$cache_checked) {
-            $cached_value = checkFromCache($cached_name);
+            $cached_value = checkFromCache('MJD:' . $this->object_title . '.' . $property);
             if ($cached_value !== false) {
                 return $cached_value;
             }
         }
-
+        startMeasure('getProperty (' . $property . ')', 1);
+		
         $value = SQLSelectOne("SELECT VALUE FROM pvalues WHERE PROPERTY_NAME = '" . DBSafe($this->object_title . '.' . $property) . "'");
         if (isset($value['VALUE'])) {
-            startMeasure('getPropertyCached2');
-            endMeasure('getPropertyCached2', 1);
             endMeasure('getProperty (' . $property . ')', 1);
-            endMeasure('getProperty', 1);
-            saveToCache($cached_name, $value['VALUE']);
             return $value['VALUE'];
         }
 
 
         if ($property == 'location_title') {
             $value = current(SQLSelectOne("SELECT TITLE FROM locations WHERE ID=" . (int)$this->location_id));
-            saveToCache($cached_name, $value);
+			endMeasure('getProperty (' . $property . ')', 1);
             return $value;
         }
 
-
         $id = $this->getPropertyByName($property, $this->class_id, $this->id);
-        startMeasure('getPropertyAll');
-        startMeasure('getProperty (' . $property . ')');
 
-        if ($id) {
-            $value = SQLSelectOne("SELECT * FROM pvalues WHERE PROPERTY_ID='" . (int)$id . "' AND OBJECT_ID='" . (int)$this->id . "'");
-            if (!$value['PROPERTY_NAME'] && $this->object_title) {
-                $value['PROPERTY_NAME'] = $this->object_title . '.' . $property;
-                SQLUpdate('pvalues', $value);
-            }
-        } else {
-            $value['VALUE'] = false;
+        $value = SQLSelectOne("SELECT * FROM pvalues WHERE PROPERTY_ID='" . (int)$id . "' AND OBJECT_ID='" . (int)$this->id . "'");
+        if (!$value['PROPERTY_NAME'] && $this->object_title) {
+            $value['PROPERTY_NAME'] = $this->object_title . '.' . $property;
+            SQLUpdate('pvalues', $value);
         }
+
         endMeasure('getProperty (' . $property . ')', 1);
-        endMeasure('getPropertyAll', 1);
         if (!isset($value['VALUE'])) {
             $value['VALUE'] = false;
         }
-        saveToCache($cached_name, $value['VALUE']);
         return $value['VALUE'];
     }
 
@@ -941,7 +935,6 @@ class objects extends module
 			SQLUpdateInsert('pvalues', $v);
 		}		
         endMeasure('setproperty_update');
-
     
         $p_lower = strtolower($property);
         if (!defined('DISABLE_SIMPLE_DEVICES') &&
