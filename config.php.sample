@@ -45,8 +45,6 @@ Define('EXT_ACCESS_PASSWORD', 'password');
 */
 
 /// (Optional)
-//Define('DROPBOX_SHOPPING_LIST', 'c:/data/dropbox/list.txt');  
-
 //Define('USE_PROXY', '127.0.0.1:8888');               //PROXY SERVER DETAILS (optional)
 //Define('USE_PROXY_AUTH', 'user:password');           //PROXY SERVER AUTH (optional)
 
@@ -62,6 +60,7 @@ $aditional_git_urls = array(
 // надо удалить таблицу history
 // надо удалить таблицу safe_exec
 // то что удалено из мдм
+//Define('DROPBOX_SHOPPING_LIST', 'c:/data/dropbox/list.txt');   удалено за ненадобностью
 //Define('WAIT_FOR_MAIN_CYCLE', 1); // Deleted не нужно
 //Define('LOWER_BACKGROUND_PROCESSES',1); // lower number of background processes created  // deleted becos dont need
 //Define('TRACK_DATA_CHANGES', 1); // TRACK EVENTS // disabled - dont need
