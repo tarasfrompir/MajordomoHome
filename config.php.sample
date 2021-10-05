@@ -50,7 +50,7 @@ Define('EXT_ACCESS_PASSWORD', 'password');
 //Define('USE_PROXY', '127.0.0.1:8888');               //PROXY SERVER DETAILS (optional)
 //Define('USE_PROXY_AUTH', 'user:password');           //PROXY SERVER AUTH (optional)
 
-//Define('HISTORY_NO_OPTIMIZE', 1);
+//Define('HISTORY_NO_OPTIMIZE', 1); // disabled - dont need - првоерить где еще может находится...
 
 Define('GIT_URL', 'https://github.com/sergejey/majordomo/');
 Define('MASTER_UPDATE_URL', GIT_URL . 'archive/master.tar.gz'); // master update URL (https://github.com/sergejey/majordomo/archive/alpha.tar.gz)
