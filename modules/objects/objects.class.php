@@ -966,15 +966,17 @@ class objects extends module
 	        startMeasure('save_to_phistory');
             if (IsSet($prop['KEEP_HISTORY']) && ($prop['KEEP_HISTORY'] > 0)) {
                 $q_rec = array();
-                $q_rec['VALUE_ID'] = $v['ID'];
-                $q_rec['ADDED'] = date('Y-m-d H:i:s');
-                $q_rec['VALUE'] = $value . '';
-                $q_rec['SOURCE'] = $source . '';
-                SQLInsert('phistory', $q_rec);
+				$q_rec['VALUE_ID'] = $v['ID'];
+				$q_rec['ADDED'] = date('Y-m-d H:i:s');
+				$q_rec['VALUE'] = $value . '';
+				$q_rec['SOURCE'] = $source . '';
+				$q_rec['OLD_VALUE'] = $old_value;
+				$q_rec['KEEP_HISTORY'] = $prop['KEEP_HISTORY'];
+				SQLInsert('phistory_queue', $q_rec);
             }
             endMeasure('save_to_phistory');
 		}
-		
+
 		// фильтрование кеша
 		if (defined('SETINGS_SYSTEMFILTER_CACHE') and SETINGS_SYSTEMFILTER_CACHE == 1) {
 			if ($old_value !== $value) {
