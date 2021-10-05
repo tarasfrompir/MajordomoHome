@@ -940,7 +940,7 @@ function setGlobal($varname, $value, $no_linked = 0, $source = '')
  * @param mixed $params Params (default 0)
  * @return mixed
  */
-function callMethod($method_name, $params = 0)
+function callMethod($method_name, $params = array())
 {
     $tmp = explode('.', $method_name);
     if (IsSet($tmp[2])) {
