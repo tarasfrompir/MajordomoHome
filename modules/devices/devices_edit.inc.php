@@ -89,9 +89,7 @@ if ($this->tab == 'logic') {
     }
     $out['METHODS']=$methods;
 
-    $method_id = $object->getMethodByName($method_name, $object->class_id, $object->id);
-
-    $method_rec = SQLSelectOne("SELECT * FROM methods WHERE ID=" . (int)$method_id);
+    $method_rec = $object->getMethodByName($method_name, $object->class_id, $object->id);
 
     if ($method_rec['OBJECT_ID'] != $object->id) {
         $method_rec = array();
