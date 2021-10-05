@@ -956,11 +956,12 @@ class objects extends module
 					$q_rec = array();
 					$q_rec['VALUE_ID'] = $v['ID'];
 					$q_rec['ADDED'] = date('Y-m-d H:i:s');
-					$q_rec['VALUE'] = $value . '';
-					$q_rec['SOURCE'] = $source . '';
+					$q_rec['OBJECT_ID'] = $this->id;
+					$q_rec['METHOD_ID'] = '';
+					$q_rec['NEW_VALUE'] = $value . '';
 					$q_rec['OLD_VALUE'] = $old_value;
-					$q_rec['KEEP_HISTORY'] = $prop['KEEP_HISTORY'];
-					SQLInsert('phistory_queue', $q_rec);
+					$q_rec['DETAILS'] = '';
+					SQLInsert('phistory', $q_rec);
 				}
 				endMeasure('save_to_phistory');
 			}
@@ -970,15 +971,16 @@ class objects extends module
                 $q_rec = array();
                 $q_rec['VALUE_ID'] = $v['ID'];
                 $q_rec['ADDED'] = date('Y-m-d H:i:s');
-                $q_rec['VALUE'] = $value . '';
-                $q_rec['SOURCE'] = $source . '';
+				$q_rec['OBJECT_ID'] = $this->id;
+				$q_rec['METHOD_ID'] = '';
+                $q_rec['NEW_VALUE'] = $value . '';
                 $q_rec['OLD_VALUE'] = $old_value;
-                $q_rec['KEEP_HISTORY'] = $prop['KEEP_HISTORY'];
-                SQLInsert('phistory_queue', $q_rec);
+                $q_rec['DETAILS'] = '';
+                SQLInsert('phistory', $q_rec);
             }
             endMeasure('save_to_phistory');
 		}
-		
+					
 		// фильтрование кеша
 		if (defined('SETINGS_SYSTEMFILTER_CACHE') and SETINGS_SYSTEMFILTER_CACHE == 1) {
 			if ($old_value !== $value) {
