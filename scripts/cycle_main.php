@@ -18,6 +18,7 @@ include("./scripts/startup_maintenance.php");
 $run_from_start = 0;
 
 setGlobal('ThisComputer.started_time', time());
+$started_time = time();
 callMethod('ThisComputer.StartUp');
 processSubscriptionsSafe('startup');
 
@@ -46,14 +47,13 @@ if (isset($_GET['onetime']) && $_GET['onetime']) {
 $old_date = date('Y-m-d');
 
 $checked_time = 0;
-$started_time = time();
 
 while (1) {
     if (time() - $checked_time > 5) {
         $checked_time = time();
         echo date("H:i:s") . " Cycle " . basename(__FILE__) . ' is running ';
 
-        $timestamp = time() - getGlobal('ThisComputer.started_time');
+        $timestamp = time() - $started_time;
         //setGlobal('ThisComputer.uptime', $timestamp);
 
         $years = floor($timestamp / 31536000);
