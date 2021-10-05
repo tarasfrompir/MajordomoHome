@@ -750,8 +750,27 @@ function safe_exec($command, $exclusive = 0, $priority = 0, $on_complete = '')
     $rec['PRIORITY'] = (int)$priority;
     $rec['ON_COMPLETE'] = $on_complete;
 
-    $rec['ID'] = SQLInsert('safe_execs', $rec);
-    return $rec['ID'];
+    $result = callAPI('/api/function/full_exec', 'GET', $rec);
+    return $result;
+}
+
+function full_exec($params = array())
+{
+    if (IsWindowsOS()) {
+        $command = utf2win($params['COMMAND']);
+    } else {
+        $command = $params['COMMAND'];
+    }
+	DebMes('o k ' . $command);
+    execInBackground($command);
+    if ($params['ON_COMPLETE']) {
+		$on_complete = $params['ON_COMPLETE'];
+        try {
+            eval($on_complete);
+        } catch (Exception $e) {
+            DebMes('ON_COMPLETE command - '. $on_complete . ' for command - '.$command.' have error. Error: exception ' . get_class($e) . ', ' . $e->getMessage() ,'execs');
+        }
+    }
 }
 
 /**
@@ -765,12 +784,7 @@ function execInBackground($cmd)
         //pclose(popen("start /B ". $cmd, "r"));
         try {
             //pclose(popen("start /B ". $cmd, "r"));
-            if (class_exists('COM')) {
-                $WshShell = new COM("WScript.Shell");
-                $oExec = $WshShell->Run("cmd /C \"" . $cmd . "\"", 0, false);
-            } else {
-                system($cmd);
-            }
+            $result = passthru($cmd);
         } catch (Exception $e) {
             DebMes('Error: exception ' . get_class($e) . ', ' . $e->getMessage() . '.');
         }
@@ -781,6 +795,7 @@ function execInBackground($cmd)
             DebMes('Error: exception ' . get_class($e) . ', ' . $e->getMessage() . '.');
         }
     }
+	return $result;
 }
 
 /**
