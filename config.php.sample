@@ -58,8 +58,12 @@ Define('MASTER_UPDATE_URL', GIT_URL . 'archive/master.tar.gz'); // master update
 $aditional_git_urls = array(
     'https://https://github.com/tarasfrompir/MajordomoHome/archive/alpha.tar.gz' => 'Moя Версия Мажордомо/alpha'
 );
-
-//Define('WAIT_FOR_MAIN_CYCLE', 1);
+//то что надо сделать
+// надо удалить таблицу history
+// надо удалить таблицу safe_exec
+// то что удалено из мдм
+//Define('WAIT_FOR_MAIN_CYCLE', 1); // Deleted не нужно
+//Define('LOWER_BACKGROUND_PROCESSES',1); // lower number of background processes created  // deleted becos dont need
 //Define('TRACK_DATA_CHANGES', 1); // TRACK EVENTS // disabled - dont need
 //Define('TRACK_DATA_CHANGES_IGNORE', 'cycle_, clockchime, uptime, WSClientsTotal'); // IGNORE // disabled - dont need
 
@@ -79,9 +83,9 @@ Define('GETURL_WARNING_TIMEOUT', 5); // TIMEOUT LIMIT FOR getURL function warnin
 //Define('PYTHON_PATH','python'); // path to python
 //Define('LOCAL_IP','127.0.0.1); // local IP
 //Define('BTRACED', 1);
-//Define('LOWER_BACKGROUND_PROCESSES',1); // lower number of background processes created  // deleted becos dont need
+
 //define('USE_REDIS','127.0.0.1'); // use Redis for caching
 //define('LOG_FILES_EXPIRE', 5); // for delete log files
 //define('BACKUP_FILES_EXPIRE', 10); // for delete backup files
 //define('CACHED_FILES_EXPIRE', 30); // for delete cached files
-// надо удалить таблицу history
+
