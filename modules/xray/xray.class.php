@@ -689,7 +689,7 @@ class xray extends module
                     if ($filter) {
                         $qry .= " AND (objects.TITLE LIKE '%" . DBSafe($filter) . "%' OR methods.TITLE LIKE '%" . DBSafe($filter) . "%' OR methods.DESCRIPTION LIKE '%" . DBSafe($filter) . "%' OR methods.EXECUTED_PARAMS LIKE '%" . DBSafe($filter) . "%')";
                     }
-                    $res = SQLSelect("SELECT methods.*, objects.TITLE as OBJECT, objects.DESCRIPTION as OBJECT_DESCRIPTION, methods.DESCRIPTION FROM methods LEFT JOIN objects ON methods.OBJECT_ID=objects.ID WHERE $qry ORDER BY methods.EXECUTED DESC");//methods.OBJECT_ID<>0
+                    $res = SQLSelect("SELECT methods.*, objects.TITLE as OBJECT, objects.DESCRIPTION as OBJECT_DESCRIPTION FROM methods LEFT JOIN objects ON methods.OBJECT_ID=objects.ID WHERE $qry ORDER BY methods.EXECUTED DESC");//methods.OBJECT_ID<>0
                     $total = count($res);
 					
 					$responce = [];
@@ -703,7 +703,12 @@ class xray extends module
                             $res[$i]['EXECUTED_PARAMS'] = serialize($tmp);
                         }
 						
-						$responce['LIST'][$i]['METHOD'] = $res[$i]['OBJECT'] . '.' . $res[$i]['TITLE'];
+						if ($res[$i]['OBJECT']) {
+							$responce['LIST'][$i]['METHOD'] = 'Object method - '. $res[$i]['OBJECT'] . '.' . $res[$i]['TITLE'];
+						} else {
+							$classname = SQLSelectOne("SELECT * FROM classes WHERE ID=" . $res[$i]['CLASS_ID']);
+							$responce['LIST'][$i]['METHOD'] = 'Class method - '. $classname['TITLE'] . '.' . $res[$i]['TITLE'];
+						}
 						if ($res[$i]['DESCRIPTION']) {
                             $responce['LIST'][$i]['DESC'] = $res[$i]['DESCRIPTION'];
                         } else {
