@@ -457,23 +457,18 @@ class objects extends module
      */
     function getMethodByName($name, $class_id, $id)
     {
-
         if ($id) {
             $meth = SQLSelectOne("SELECT ID FROM methods WHERE OBJECT_ID='" . (int)$id . "' AND TITLE = '" . DBSafe($name) . "'");
             if ($meth) {
-                return $meth['ID'];
+                return $meth;
             }
         }
-
-        //include_once(DIR_MODULES.'classes/classes.class.php');
-        //$cl=new classes();
-        //$meths=$cl->getParentMethods($class_id, '', 1);
         $meths = $this->getParentMethods($class_id, '', 1);
 
         $total = count($meths);
         for ($i = 0; $i < $total; $i++) {
             if (strtolower($meths[$i]['TITLE']) == strtolower($name)) {
-                return $meths[$i]['ID'];
+                return $meths[$i];
             }
         }
         return false;
@@ -587,15 +582,13 @@ class objects extends module
         startMeasure('callMethod (' . $original_method_name . ')');
 
         if (!$parentClassId) {
-            $id = $this->getMethodByName($name, $this->class_id, $this->id);
+            $method = $this->getMethodByName($name, $this->class_id, $this->id);
             $parentClassId = $this->class_id;
         } else {
-            $id = $this->getMethodByName($name, $parentClassId, 0);
+            $method = $this->getMethodByName($name, $parentClassId, 0);
         }
 
-        if ($id) {
-
-            $method = SQLSelectOne("SELECT * FROM methods WHERE ID='" . $id . "'");
+        if ($method) {
             $update_rec = array('ID' => $method['ID']);
             $update_rec['EXECUTED'] = date('Y-m-d H:i:s');
             if (defined('CALL_SOURCE')) {
