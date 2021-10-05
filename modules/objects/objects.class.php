@@ -626,7 +626,6 @@ class objects extends module
 		// run parent method befor when need
 		if ($method['OBJECT_ID'] && $method['CALL_PARENT'] == 1) {
 			$beforMethodCode = $parentMethod['CODE'];
-			DebMes('Run code befor');
 			if ($beforMethodCode != '') {
                if (defined('PYTHON_PATH') and isItPythonCode($beforMethodCode)) {
 					echo ($code);
@@ -667,7 +666,6 @@ class objects extends module
 		// run parent method after when need
 		if ($method['OBJECT_ID'] && $method['CALL_PARENT'] == 2) {
 			$afterMethodCode = $parentMethod['CODE'];
-			DebMes('Run code after');
 			if ($afterMethodCode != '') {
                if (defined('PYTHON_PATH') and isItPythonCode($afterMethodCode)) {
 					echo ($code);
