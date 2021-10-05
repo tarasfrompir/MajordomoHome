@@ -176,19 +176,19 @@ if ($this->filter_name == 'behavior' ) {
 if ($this->filter_name == 'systemfilter' ) {
 
     $options = array(
-		'SYSTEMFILTER_PROPERTY' => array(
+	'SYSTEMFILTER_PROPERTY' => array(
             'TITLE' => 'Filtering Objects property',
 			'TYPE' => 'onoff',
             'DEFAULTVALUE' => 1,
 			'VALUE' => 1,
             'NOTES' => 'Фильтрование входящих данных от устройств в свойстве Обьектов'
         ),
-		'SYSTEMFILTER_HYSTORY' => array(
+	'SYSTEMFILTER_HYSTORY' => array(
             'TITLE' => 'Filtering hystory Objects property',
 			'TYPE' => 'onoff',
             'DEFAULTVALUE' => 1,
 			'VALUE' => 1,
-            'NOTES' => 'Фильтрование исторических значений в свойстве Обьектов',
+            'NOTES' => 'Фильтрование исторических значений в свойстве Обьектов. Если отключено то история идет через очередь истории.',
         ),
 		'SYSTEMFILTER_CACHE' => array(
             'TITLE' => 'Filtering Objects property in cache',
