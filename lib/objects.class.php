@@ -949,7 +949,7 @@ function setGlobal($varname, $value, $no_linked = 0, $source = '')
  * @param mixed $params Params (default 0)
  * @return mixed
  */
-function callMethod($method_name, $params = 0)
+function callMethod($method_name, $params = array())
 {
     $tmp = explode('.', $method_name);
     if (IsSet($tmp[2])) {
@@ -975,7 +975,7 @@ function callMethod($method_name, $params = 0)
     }
 }
 
-function callMethodSafe($method_name, $params = 0)
+function callMethodSafe($method_name, $params = array())
 {
     $tmp = explode('.', $method_name);
     if (IsSet($tmp[2])) {
@@ -994,6 +994,30 @@ function callMethodSafe($method_name, $params = 0)
 
     if ($obj) {
         return $obj->callMethodSafe($method_name, $params);
+    } else {
+        return 0;
+    }
+}
+
+function raiseEvent($method_name, $params = 0)
+{
+    $tmp = explode('.', $method_name);
+    if (IsSet($tmp[2])) {
+        $object_name = $tmp[0] . '.' . $tmp[1];
+        $varname = $tmp[2];
+    } elseif (IsSet($tmp[1])) {
+        $object_name = $tmp[0];
+        $method_name = $tmp[1];
+    } else {
+        $object_name = 'ThisComputer';
+    }
+    if ($object_name == 'AllScripts') {
+        return runScriptSafe($method_name,$params);
+    }
+    $obj = getObject($object_name);
+
+    if ($obj) {
+        return $obj->raiseEvent($method_name, $params);
     } else {
         return 0;
     }
@@ -1088,8 +1112,8 @@ function injectObjectMethodCode($method_name, $key, $code)
     if ($obj) {
         //return $obj->callMethod($method_name, $params);
         $id = $obj->getMethodByName($method_name, $obj->class_id, $obj->id);
-        if ($id) {
-            $method = SQLSelectOne("SELECT * FROM methods WHERE ID=" . (int)$id);
+        if ($id['ID']) {
+            $method = SQLSelectOne("SELECT * FROM methods WHERE ID=" . (int)$id['ID']);
             if ($method['OBJECT_ID'] != $obj->id) {
                 $method = array();
                 $method['OBJECT_ID'] = $obj->id;
@@ -1139,7 +1163,7 @@ function processTitle($title, $object = 0)
     //startMeasure('processTitle ['.$in_title.']');
 
     if ($in_title != '') {
-        if (IsSet($_SERVER['REQUEST_METHOD'])) {
+        if (IsSet($_SERVER['REQUEST_METHOD']) and isset($title_memory_cache[$key])) {
             if ($title_memory_cache[$key]) {
                 return $title_memory_cache[$key];
             }
@@ -1436,4 +1460,93 @@ function addToOperationsQueue($topic, $dataname, $datavalue = '', $uniq = false,
     $rec['ID'] = SQLInsert('operations_queue', $rec);
     SQLExec("DELETE FROM operations_queue WHERE EXPIRE<NOW();");
     return $rec['ID'];
+}
+
+/**
+ * Summary of getClass
+ * @param mixed $class_name Class name
+ * @param mixed $parent_class Parent class (default '')
+ * @return mixed
+ */
+function getClass($class_name, $parent_class = '')
+{
+    if ($parent_class != '') {
+        $parent_class_id = getClass($parent_class);
+    } else {
+        $parent_class_id = 0;
+    }
+
+    $class = SQLSelectOne("SELECT ID FROM classes WHERE TITLE = '" . DBSafe($class_name) . "' AND PARENT_ID = '" . $parent_class_id . "'");
+
+    if ($class['ID']) {
+        return $class['ID'];
+    } 
+    DebMes("Неверный вызов функции getClass - такой КЛАСС отсутствует, проверьте свой код вызова функции" , 'error');
+    return false;
+}
+
+/**
+ * Summary of getClassMethods
+ * @param mixed $class_name 
+ * @return mixed
+ */
+function getClassMethods($class_name)
+{
+    $class_id = getClass($class_name);
+
+    if ($class_id) {
+        $method = SQLSelect("SELECT ID, TITLE FROM methods WHERE CLASS_ID = '" . $class_id . "' AND OBJECT_ID = 0");
+        return $method;
+    }
+    return false;
+}
+
+/**
+ * Summary of removeClassProperty
+ * @param mixed $class_name Class name
+ * @param mixed $property_name Property name
+ * @return true|false
+ */
+function removeClassProperty($class_name, $property_name)
+{
+    $class_id = getClass($class_name);
+
+    if ($class_id) {
+        SQLExec("DELETE * FROM properties WHERE TITLE = '" . DBSafe($property_name) . "' AND OBJECT_ID = 0 AND CLASS_ID  = '" . $class_id . "'");
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Summary of getClassPropertys
+ * @param mixed $class_name Class name
+ * @return mixed
+ */
+function getClassPropertys($class_name)
+{
+    $class_id = getClass($class_name);
+
+    if ($class_id) {
+        $prop = SQLSelect("SELECT ID, TITLE FROM properties WHERE OBJECT_ID = 0 AND CLASS_ID  = '" . $class_id . "'");
+        return $prop;
+    }
+    return false;
+}
+
+
+/**
+ * Summary of removeClassMethod
+ * @param mixed $class_name Class method
+ * @return mixed
+ */
+function removeClassMethod($class_name, $method_name)
+{
+    $class_id = getClass($class_name);
+
+    if ($class_id) {
+        SQLExec("DELETE * FROM methods WHERE CLASS_ID = '" . $class_id . "' AND TITLE = '" . DBSafe($method_name) . "' AND OBJECT_ID = 0");
+        return true;
+    }
+    return false;
 }

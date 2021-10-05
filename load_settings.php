@@ -25,7 +25,9 @@ if (isset($_GET['lang'])) {
 
 
 for ($i = 0; $i < $total; $i++)
-    Define('SETTINGS_' . $settings[$i]['NAME'], $settings[$i]['VALUE']);
+    if (!defined('SETTINGS_' . $settings[$i]['NAME'])) {
+		Define('SETTINGS_' . $settings[$i]['NAME'], $settings[$i]['VALUE']);
+	}
 
 if (!defined('SETTINGS_SITE_LANGUAGE')) {
     Define('SETTINGS_SITE_LANGUAGE', 'en');
@@ -70,7 +72,7 @@ $offset_text = timezone_offset_string($offset);
 SQLExec("SET time_zone = '" . $offset_text . "';");
 
 
-if (($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'POST') &&
+if (isset($_SERVER['REQUEST_METHOD']) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'POST') &&
     defined('WAIT_FOR_MAIN_CYCLE') &&
     WAIT_FOR_MAIN_CYCLE == 1 &&
     !preg_match('/clear_all_history\.php/', $_SERVER['REQUEST_URI']) &&
@@ -111,12 +113,11 @@ if (($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'POST'
 }
 
 
-if (IsSet($_SERVER['SERVER_ADDR']) && IsSet($_SERVER['SERVER_PORT'])) {
-    Define('SERVER_URL', 'http://' . $_SERVER['HTTP_HOST']);
-    Define('SERVER_ADDR', $_SERVER['SERVER_ADDR']);
-} else {
-    Define('SERVER_URL', 'http://localhost:80');
-}
+// не нашел применения , может туплю ?
+//if (IsSet($_SERVER['SERVER_ADDR']) && IsSet($_SERVER['SERVER_PORT'])) {
+//    Define('SERVER_ADDR', $_SERVER['SERVER_ADDR']);
+//}
+
 
 if (!defined('WEBSOCKETS_PORT'))
     Define('WEBSOCKETS_PORT', 8001);

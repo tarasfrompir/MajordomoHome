@@ -195,12 +195,12 @@ function postToWebSocket($property, $value, $post_action = 'PostProperty')
         return false;
     }
 
-    require_once ROOT . 'lib/websockets/client/lib/class.websocket_client.php';
+    require_once ROOT . 'lib/WS/Client.php';
 
     global $wsClient;
 
     if (!Is_Object($wsClient)) {
-        $wsClient = new WebsocketClient;
+        $wsClient = new \Bloatless\WebSocket\Client;
         if (!(@$wsClient->connect('127.0.0.1', WEBSOCKETS_PORT, '/majordomo'))) {
             $wsClient = false;
             if (defined('DEBUG_WEBSOCKETS') && DEBUG_WEBSOCKETS == 1) {
@@ -210,7 +210,7 @@ function postToWebSocket($property, $value, $post_action = 'PostProperty')
         }
     }
 
-    if (!Is_Object($wsClient) && isset($_SERVER['REQUEST_METHOD'])) {
+    if (!Is_Object($wsClient) && IsSet($_SERVER['REQUEST_METHOD'])) {
         return false;
     }
 
@@ -241,9 +241,9 @@ function postToWebSocket($property, $value, $post_action = 'PostProperty')
         }
     }
 
-    if (!$data_sent && !isset($_SERVER['REQUEST_METHOD'])) {
+    if (!$data_sent && !IsSet($_SERVER['REQUEST_METHOD'])) {
         //reconnect
-        $wsClient = new WebsocketClient;
+        $wsClient = new \Bloatless\WebSocket\Client;
         if ((@$wsClient->connect('127.0.0.1', WEBSOCKETS_PORT, '/majordomo'))) {
             $data_sent = @$wsClient->sendData($payload);
         } else {
