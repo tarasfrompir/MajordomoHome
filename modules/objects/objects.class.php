@@ -498,6 +498,10 @@ class objects extends module
 
     function callMethodSafe($name, $params = 0)
     {
+		if (!$this->object_title) {
+			DebMes('Incorrect object title. Chek the correct name of object when called method safe with name - ' . $name, 'errors');
+			return false;
+		}
         startMeasure('callMethodSafe');
         $current_call = $this->object_title . '.' . $name;
         $call_stack = array();
@@ -565,7 +569,7 @@ class objects extends module
     function callMethod($name, $params = array())
     {
 		if (!$this->object_title) {
-			DebMes('Incorrect object title. Chek the correct name of object when called mothod with name - ' . $name, 'errors');
+			DebMes('Incorrect object title. Chek the correct name of object when called method with name - ' . $name, 'errors');
 			return false;
 		}
         startMeasure('callMethod');
@@ -591,22 +595,20 @@ class objects extends module
             $source = 'unknown';
         }
 
-        $update_rec['EXECUTED_SRC'] = $source;
-
         if (!is_array($params)) {
             $params = array();
 			DebMes('Method - ' . $name . 'has wrong params. Chek the correct params value in this method.', 'errors');
         }
-        $params['ORIGINAL_OBJECT_TITLE'] = $this->object_title;
-        
         if ($params) {
             $saved_params = $params;
-            unset($params['runSafeMethod']);
+            unset($saved_params['runSafeMethod']);
             unset($saved_params['m_c_s']);
             unset($saved_params['SOURCE']);
 			unset($saved_params['raiseEvent']);
             $update_rec['EXECUTED_PARAMS'] = json_encode($saved_params, JSON_UNESCAPED_UNICODE);
         }
+        $params['ORIGINAL_OBJECT_TITLE'] = $this->object_title;
+		$update_rec['EXECUTED_SRC'] = $source;
         SQLUpdate('methods', $update_rec);
 
         if ($method['OBJECT_ID'] && $method['CALL_PARENT'] != 0) {
