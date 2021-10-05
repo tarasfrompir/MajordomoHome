@@ -1,15 +1,8 @@
 <?php
 /**
  * Objects
- *
- * Objects
- *
- * @package MajorDoMo
- * @author Serge Dzheigalo <jey@tut.by> http://smartliving.ru/
- * @version 0.4 (wizard, 12:05:51 [May 22, 2009])
  */
-//
-//
+
 class objects extends module
 {
 	var $xml;
@@ -598,15 +591,16 @@ class objects extends module
             $params = array();
 			DebMes('Method - ' . $name . 'has wrong params. Chek the correct params value in this method.', 'errors');
         }
+        $params['OBJECT_TITLE'] = $this->object_title;
         if ($params) {
             $saved_params = $params;
             unset($saved_params['runSafeMethod']);
             unset($saved_params['m_c_s']);
             unset($saved_params['SOURCE']);
 			unset($saved_params['raiseEvent']);
+			unset($saved_params['no_session']);
             $update_rec['EXECUTED_PARAMS'] = json_encode($saved_params, JSON_UNESCAPED_UNICODE);
         }
-        $params['ORIGINAL_OBJECT_TITLE'] = $this->object_title;
 		$update_rec['EXECUTED_SRC'] = $source;
         SQLUpdate('methods', $update_rec);
         if ($method['OBJECT_ID'] && $method['CALL_PARENT']) {
