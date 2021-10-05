@@ -1103,8 +1103,8 @@ function injectObjectMethodCode($method_name, $key, $code)
     if ($obj) {
         //return $obj->callMethod($method_name, $params);
         $id = $obj->getMethodByName($method_name, $obj->class_id, $obj->id);
-        if ($id) {
-            $method = SQLSelectOne("SELECT * FROM methods WHERE ID=" . (int)$id);
+        if ($id['ID']) {
+            $method = SQLSelectOne("SELECT * FROM methods WHERE ID=" . (int)$id['ID']);
             if ($method['OBJECT_ID'] != $obj->id) {
                 $method = array();
                 $method['OBJECT_ID'] = $obj->id;
