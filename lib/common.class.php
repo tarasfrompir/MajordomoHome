@@ -847,7 +847,7 @@ function registerError($code = 'custom', $details = '')
     $e = new \Exception;
     $backtrace = $e->getTraceAsString();
 
-    DebMes("Error registered (type: $code):\n" . $details . "\nBacktrace:\n" . $backtrace, 'error');
+    DebMes("Error registered (type: $code):\n" . $details . "\nBacktrace:\n" . $backtrace, 'errors');
     $code = trim($code);
 
     if ($code == 'sql') {
