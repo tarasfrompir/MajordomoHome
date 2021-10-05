@@ -73,8 +73,6 @@ SQLExec("SET time_zone = '" . $offset_text . "';");
 
 
 if (isset($_SERVER['REQUEST_METHOD']) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'POST') &&
-    defined('WAIT_FOR_MAIN_CYCLE') &&
-    WAIT_FOR_MAIN_CYCLE == 1 &&
     !preg_match('/clear_all_history\.php/', $_SERVER['REQUEST_URI']) &&
     !preg_match('/diagnostic\.php/', $_SERVER['REQUEST_URI']) &&
     !preg_match('/\/ajax\//', $_SERVER['REQUEST_URI']) &&
