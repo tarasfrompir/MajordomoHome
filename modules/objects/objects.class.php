@@ -455,10 +455,10 @@ class objects extends module
      *
      * @access public
      */
-    function getMethodByName($name, $class_id, $id)
+    function getMethodByName($name='', $class_id=0, $id=0)
     {
         if ($id) {
-            $meth = SQLSelectOne("SELECT ID FROM methods WHERE OBJECT_ID='" . (int)$id . "' AND TITLE = '" . DBSafe($name) . "'");
+            $meth = SQLSelectOne("SELECT * FROM methods WHERE OBJECT_ID='" . (int)$id . "' AND TITLE = '" . DBSafe($name) . "'");
             if ($meth) {
                 return $meth;
             }
@@ -581,7 +581,6 @@ class objects extends module
 			DebMes('Method - ' . $name . ' not found. Chek the correct method name', 'errors');
 			return false;
 		}
-
         $update_rec = array('ID' => $method['ID']);
         $update_rec['EXECUTED'] = date('Y-m-d H:i:s');
         // deleted chek the call sourse to delete 
@@ -610,8 +609,7 @@ class objects extends module
         $params['ORIGINAL_OBJECT_TITLE'] = $this->object_title;
 		$update_rec['EXECUTED_SRC'] = $source;
         SQLUpdate('methods', $update_rec);
-
-        if ($method['OBJECT_ID'] && $method['CALL_PARENT'] != 0) {
+        if ($method['OBJECT_ID'] && $method['CALL_PARENT']) {
             // get parent class method
             $parentMethod = $this->getMethodByName($name, $this->class_id);
         }
@@ -628,6 +626,7 @@ class objects extends module
 		// run parent method befor when need
 		if ($method['OBJECT_ID'] && $method['CALL_PARENT'] == 1) {
 			$beforMethodCode = $parentMethod['CODE'];
+			DebMes('Run code befor');
 			if ($beforMethodCode != '') {
                if (defined('PYTHON_PATH') and isItPythonCode($beforMethodCode)) {
 					echo ($code);
@@ -668,6 +667,7 @@ class objects extends module
 		// run parent method after when need
 		if ($method['OBJECT_ID'] && $method['CALL_PARENT'] == 2) {
 			$afterMethodCode = $parentMethod['CODE'];
+			DebMes('Run code after');
 			if ($afterMethodCode != '') {
                if (defined('PYTHON_PATH') and isItPythonCode($afterMethodCode)) {
 					echo ($code);
