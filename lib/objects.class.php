@@ -966,7 +966,7 @@ function callMethod($method_name, $params = array())
     }
 }
 
-function callMethodSafe($method_name, $params = 0)
+function callMethodSafe($method_name, $params = array())
 {
     $tmp = explode('.', $method_name);
     if (IsSet($tmp[2])) {
