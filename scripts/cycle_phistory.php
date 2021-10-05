@@ -4,19 +4,13 @@ chdir(dirname(__FILE__) . '/../');
 
 include_once("./config.php");
 include_once("./lib/loader.php");
-
+include_once("./load_settings.php");
 set_time_limit(0);
 // если история фильтруется то не нужен цикл
-if (defined('SETINGS_SYSTEMFILTER_HYSTORY') and (SETINGS_SYSTEMFILTER_HYSTORY == 1 )) exit;
-include_once("./load_settings.php");
-include_once(DIR_MODULES . "control_modules/control_modules.class.php");
-$ctl = new control_modules();
+if (defined('SETTINGS_SYSTEMFILTER_HYSTORY') and (SETTINGS_SYSTEMFILTER_HYSTORY == 1 )) exit;
 
 //SQLTruncateTable('phistory_queue');
 
-debug_echo("Optimizing phistory");
-SQLExec("OPTIMIZE TABLE phistory;");
-debug_echo("Done");
 
 $limit=(int)gg('phistory_queue_limit');
 if (!$limit) {
