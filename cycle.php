@@ -36,6 +36,7 @@ while (!$connected) {
     }
 }
 echo "CONNECTED TO DB" . PHP_EOL;
+
 $old_mask = umask(0);
 
 // moving some folders to ./cms/
@@ -379,7 +380,6 @@ function iterationThread($pipe = null, $cycle_name = '') {
         }
     } else {
         $size = 10240;
-        
     }
     if ($size > 0) {
         if ($result = fread($pipe, $size)) {

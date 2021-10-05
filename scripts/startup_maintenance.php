@@ -41,7 +41,7 @@ if (!defined('CACHED_FILES_EXPIRE')) {
 echo "Target: " . $target_dir . "\n";
 echo "Full backup: " . $full_backup . "\n";
 
-sleep(5);
+sleep(2);
 
 //removing old log files
 if (defined('SETTINGS_SYSTEM_DEBMES_PATH') && SETTINGS_SYSTEM_DEBMES_PATH != '') { 
@@ -153,12 +153,9 @@ if (is_dir($backups_dir)) {
 // CHECK/REPAIR/OPTIMIZE TABLES
 $tables = SQLSelect("SHOW TABLES FROM `" . DB_NAME . "`");
 $total = count($tables);
-
 for ($i = 0; $i < $total; $i++) {
     $table = $tables[$i]['Tables_in_' . DB_NAME];
-
     echo 'Checking table [' . $table . '] ...';
-
     if ($result = SQLExec("CHECK TABLE " . $table . ";")) {
         echo "OK" . "\n";
     } else {
@@ -179,13 +176,22 @@ if (time() >= getGlobal('ThisComputer.started_time')) {
 
 
 // removing incorrect pvalues
-$sqlQuery = "SELECT pvalues.*, properties.ID AS PROP_ID  FROM `pvalues` LEFT JOIN properties ON pvalues.PROPERTY_ID=properties.ID WHERE IsNull(properties.ID)";
+$sqlQuery = "SELECT pvalues.*, properties.ID AS PROP_ID, objects.ID as OBJ_ID  FROM `pvalues` LEFT JOIN properties ON pvalues.PROPERTY_ID=properties.ID LEFT JOIN objects ON pvalues.OBJECT_ID=objects.ID";
 $data = SQLSelect($sqlQuery);
 $total = count($data);
+$found_pvalues=array();
 for ($i = 0; $i < $total; $i++) {
-    echo "Removing incorrect property value: " . $data[$i]['PROPERTY_NAME'] . PHP_EOL;
-    SQLExec("DELETE FROM phistory WHERE VALUE_ID=" . $data[$i]['ID']);
-    SQLExec("DELETE FROM pvalues WHERE ID=" . $data[$i]['ID']);
+    if (!$data[$i]['PROP_ID'] || !$data[$i]['OBJ_ID']) {
+     echo "Removing incorrect property value: " . $data[$i]['PROPERTY_NAME'] . PHP_EOL;
+     SQLExec("DELETE FROM phistory WHERE VALUE_ID=" . $data[$i]['ID']);
+     SQLExec("DELETE FROM pvalues WHERE ID=" . $data[$i]['ID']);
+    } else {
+        $found_pvalues[]=$data[$i]['ID'];
+    }
+}
+if (isset($found_pvalues[0])) {
+    $sqlQuery = "DELETE FROM phistory WHERE VALUE_ID NOT IN (".implode(',',$found_pvalues).")";
+    $data=SQLExec($sqlQuery);
 }
 
 // fixing property names
