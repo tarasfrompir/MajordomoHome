@@ -506,9 +506,9 @@ class objects extends module
                 $call_stack = $params['m_c_s'];
                 unset($params['m_c_s']);
             }
-            if (isset($params['r_s_m']) && !empty($params['r_s_m'])) {
-                $run_SafeMethod = $params['r_s_m'];
-                unset($params['r_s_m']);
+            if (isset($params['runSafeMethod']) && !empty($params['runSafeMethod'])) {
+                $run_SafeMethod = $params['runSafeMethod'];
+                unset($params['runSafeMethod']);
             }
             if (isset($params['raiseEvent']) && !empty($params['raiseEvent'])) {
                 $raiseEvent = $params['raiseEvent'];
@@ -525,9 +525,9 @@ class objects extends module
                 $raiseEvent = $_GET['raiseEvent'];
                 unset($params['raiseEvent']);
             }
-            if (isset($_GET['r_s_m']) && !empty($_GET['r_s_m'])) {
-                $run_SafeMethod = $_GET['r_s_m'];
-                unset($params['r_s_m']);
+            if (isset($_GET['runSafeMethod']) && !empty($_GET['runSafeMethod'])) {
+                $run_SafeMethod = $_GET['runSafeMethod'];
+                unset($params['runSafeMethod']);
             }
         }
 
@@ -544,11 +544,11 @@ class objects extends module
         $call_stack[] = $current_call;
         $params['raiseEvent'] = $raiseEvent ?? false;
         $params['m_c_s'] = $call_stack ?? false;
-        $params['r_s_m'] = $run_SafeMethod ?? false;
+        $params['runSafeMethod'] = $run_SafeMethod ?? false;
         if (IsSet($_SERVER['REQUEST_URI']) && ($_SERVER['REQUEST_URI'] != '') && (!$raiseEvent && $run_SafeMethod)) {
             $result = $this->callMethod($this->object_title . '.' . $name, $params);
         } else {
-            $params['r_s_m'] = 1;
+            $params['runSafeMethod'] = 1;
             $result = callAPI('/api/method/' . urlencode($this->object_title . '.' . $name), 'GET', $params);
         }
         endMeasure('callMethodSafe');
@@ -562,97 +562,77 @@ class objects extends module
      *
      * @access public
      */
-    function callMethod($name, $params = 0, $parentClassId = 0)
+    function callMethod($name, $params = array())
     {
-		if (!$this->object_title) return false;
-
-        if (!$parentClassId) {
-            verbose_log("Method [" . $this->object_title . ".$name] (" . (is_array($params) ? json_encode($params) : '') . ")");
-            //dprint("Method [" . $this->object_title . ".$name] (" . (is_array($params) ? json_encode($params) : '') . ")",false);
-        } else {
-            verbose_log("Class method [" . $this->class_title . '/' . $this->object_title . ".$name] (" . (is_array($params) ? json_encode($params) : '') . ")");
-            //dprint("Class method [" . $this->class_title . '/' . $this->object_title . ".$name] (" . (is_array($params) ? json_encode($params) : '') . ")",false);
-        }
-        //debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        //echo "<hr>";
+		if (!$this->object_title) {
+			DebMes('Incorrect object title. Chek the correct name of object when called mothod with name - ' . $name, 'errors');
+			return false;
+		}
         startMeasure('callMethod');
-
         $original_method_name = $this->object_title . '.' . $name;
-
         startMeasure('callMethod (' . $original_method_name . ')');
 
-        if (!$parentClassId) {
-            $method = $this->getMethodByName($name, $this->class_id, $this->id);
-            $parentClassId = $this->class_id;
+        $method = $this->getMethodByName($name, $this->class_id, $this->id);
+        if (!$method) {
+			DebMes('Method - ' . $name . ' not found. Chek the correct method name', 'errors');
+			return false;
+		}
+
+        $update_rec = array('ID' => $method['ID']);
+        $update_rec['EXECUTED'] = date('Y-m-d H:i:s');
+        // deleted chek the call sourse to delete 
+		//if (defined('CALL_SOURCE')) {
+        //    $source = CALL_SOURCE;
+        //} else 
+			
+		if (isset($_SERVER['REQUEST_URI'])){
+            $source = urldecode($_SERVER['REQUEST_URI']);
         } else {
-            $method = $this->getMethodByName($name, $parentClassId, 0);
+            $source = 'unknown';
         }
 
-        if ($method) {
-            $update_rec = array('ID' => $method['ID']);
-            $update_rec['EXECUTED'] = date('Y-m-d H:i:s');
-            if (defined('CALL_SOURCE')) {
-                $source = CALL_SOURCE;
-            } else if (isset($_SERVER['REQUEST_URI'])){
-                $source = urldecode($_SERVER['REQUEST_URI']);
-            } else {
-                $source = 'unknown';
-            }
+        $update_rec['EXECUTED_SRC'] = $source;
 
-            $update_rec['EXECUTED_SRC'] = $source;
+        if (!is_array($params)) {
+            $params = array();
+			DebMes('Method - ' . $name . 'has wrong params. Chek the correct params value in this method.', 'errors');
+        }
+        $params['ORIGINAL_OBJECT_TITLE'] = $this->object_title;
+        
+        if ($params) {
+            $saved_params = $params;
+            unset($params['runSafeMethod']);
+            unset($saved_params['m_c_s']);
+            unset($saved_params['SOURCE']);
+			unset($saved_params['raiseEvent']);
+            $update_rec['EXECUTED_PARAMS'] = json_encode($saved_params, JSON_UNESCAPED_UNICODE);
+        }
+        SQLUpdate('methods', $update_rec);
 
-
-            if (!$method['OBJECT_ID']) {
-                if (!$params) {
-                    $params = array();
-                }
-                $params['ORIGINAL_OBJECT_TITLE'] = $this->object_title;
-            }
-
-            if ($params) {
-                $saved_params = $params;
-                unset($params['r_s_m']);
-                unset($saved_params['m_c_s']);
-                unset($saved_params['SOURCE']);
-                $update_rec['EXECUTED_PARAMS'] = json_encode($saved_params, JSON_UNESCAPED_UNICODE);
-                if (strlen($update_rec['EXECUTED_PARAMS']) > 250) {
-                    $update_rec['EXECUTED_PARAMS'] = substr($update_rec['EXECUTED_PARAMS'], 0, 250);
-                }
-            }
-            SQLUpdate('methods', $update_rec);
-
-            if ($method['OBJECT_ID'] && $method['CALL_PARENT'] == 1) {
-                // call class method
-                startMeasure('callParentMethod');
-                $parent_success = $this->callMethod($this->object_title.'.'.$name, $params, $this->class_id);
-                endMeasure('callParentMethod');
-            } elseif ($method['CALL_PARENT'] == 1) {
-                $parentClass = SQLSelectOne("SELECT ID, PARENT_ID FROM classes WHERE ID=" . (int)$parentClassId);
-                if ($parentClass['PARENT_ID']) {
-                    startMeasure('callParentMethod');
-                    $parent_success = $this->callMethod($this->object_title.'.'.$name, $params, $parentClass['PARENT_ID']);
-                    endMeasure('callParentMethod');
-                }
-            }
-
-            if ($method['SCRIPT_ID']) {
-                /*
-                 $script=SQLSelectOne("SELECT * FROM scripts WHERE ID='".$method['SCRIPT_ID']."'");
-                 $code=$script['CODE'];
-                */
-                runScriptSafe($method['SCRIPT_ID']);
-            } else {
-                $code = $method['CODE'];
-            }
-
-
-            if ($code != '') {
-               if (defined('PYTHON_PATH') and isItPythonCode($code)) {
+        if ($method['OBJECT_ID'] && $method['CALL_PARENT'] != 0) {
+            // get parent class method
+            $parentMethod = $this->getMethodByName($name, $this->class_id);
+        }
+		
+		if ($method['SCRIPT_ID']) {
+            /*
+            $script=SQLSelectOne("SELECT * FROM scripts WHERE ID='".$method['SCRIPT_ID']."'");
+            $code=$script['CODE'];
+            */
+            runScriptSafe($method['SCRIPT_ID']);
+        } else {
+            $code = $method['CODE'];
+        }
+		// run parent method befor when need
+		if ($method['OBJECT_ID'] && $method['CALL_PARENT'] == 1) {
+			$beforMethodCode = $parentMethod['CODE'];
+			if ($beforMethodCode != '') {
+               if (defined('PYTHON_PATH') and isItPythonCode($beforMethodCode)) {
 					echo ($code);
-                    python_run_code($code, $params, $this->object_title);
+                    python_run_code($beforMethodCode, $params, $this->object_title);
                 } else {
                     try {
-                        $success = eval($code);
+                        $success = eval($beforMethodCode);
                         if ($success === false) {
                             //getLogger($this)->error(sprintf('Error in "%s.%s" method.', $this->object_title, $name));
                             registerError('method', sprintf('Exception in "%s.%s" method.', $this->object_title, $name));
@@ -663,33 +643,53 @@ class objects extends module
                     }
                 }
             }
-            endMeasure('callMethod', 1);
-            endMeasure('callMethod (' . $original_method_name . ')', 1);
-            if ($method['OBJECT_ID'] && $method['CALL_PARENT'] == 2) {
-                startMeasure('callParentMethod');
-                $parent_success = $this->callMethod($name, $params, $this->class_id);
-                endMeasure('callParentMethod');
-            } elseif ($method['CALL_PARENT'] == 2) {
-                $parentClass = SQLSelectOne("SELECT ID, PARENT_ID FROM classes WHERE ID=" . (int)$parentClassId);
-                if ($parentClass['PARENT_ID']) {
-                    startMeasure('callParentMethod');
-                    $parent_success = $this->callMethod($name, $params, $parentClass['PARENT_ID']);
-                    endMeasure('callParentMethod');
+		}
+		// run main code in method
+        if ($code != '') {
+            if (defined('PYTHON_PATH') and isItPythonCode($code)) {
+				echo ($code);
+                python_run_code($code, $params, $this->object_title);
+            } else {
+                try {
+                    $success = eval($code);
+                    if ($success === false) {
+                        //getLogger($this)->error(sprintf('Error in "%s.%s" method.', $this->object_title, $name));
+                        registerError('method', sprintf('Exception in "%s.%s" method.', $this->object_title, $name));
+                    }
+                } catch (Exception $e) {
+                    //getLogger($this)->error(sprintf('Exception in "%s.%s" method', $this->object_title, $name), $e);
+                    registerError('method', sprintf('Exception in "%s.%s" method ' . $e->getMessage(), $this->object_title, $name));
                 }
-            } else {
-                $parent_success = true;
             }
-
-            if (isset($success)) {
-                return $success;
-            } else {
-                return $parent_success;
+        }
+		
+		// run parent method after when need
+		if ($method['OBJECT_ID'] && $method['CALL_PARENT'] == 2) {
+			$afterMethodCode = $parentMethod['CODE'];
+			if ($afterMethodCode != '') {
+               if (defined('PYTHON_PATH') and isItPythonCode($afterMethodCode)) {
+					echo ($code);
+                    python_run_code($afterMethodCode, $params, $this->object_title);
+                } else {
+                    try {
+                        $success = eval($afterMethodCode);
+                        if ($success === false) {
+                            //getLogger($this)->error(sprintf('Error in "%s.%s" method.', $this->object_title, $name));
+                            registerError('method', sprintf('Exception in "%s.%s" method.', $this->object_title, $name));
+                        }
+                    } catch (Exception $e) {
+                        //getLogger($this)->error(sprintf('Exception in "%s.%s" method', $this->object_title, $name), $e);
+                        registerError('method', sprintf('Exception in "%s.%s" method ' . $e->getMessage(), $this->object_title, $name));
+                    }
+                }
             }
-
+		}
+        endMeasure('callMethod (' . $original_method_name . ')', 1);
+        endMeasure('callMethod', 1);
+        if (isset($success)) {
+            return $success;
         } else {
-            endMeasure('callMethod (' . $original_method_name . ')', 1);
-            endMeasure('callMethod', 1);
-            return false;
+            return $parent_success;
         }
     }
 
