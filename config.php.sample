@@ -79,7 +79,7 @@ Define('GETURL_WARNING_TIMEOUT', 5); // TIMEOUT LIMIT FOR getURL function warnin
 //Define('PYTHON_PATH','python'); // path to python
 //Define('LOCAL_IP','127.0.0.1); // local IP
 //Define('BTRACED', 1);
-//Define('LOWER_BACKGROUND_PROCESSES',1); // lower number of background processes created
+//Define('LOWER_BACKGROUND_PROCESSES',1); // lower number of background processes created  // deleted becos dont need
 //define('USE_REDIS','127.0.0.1'); // use Redis for caching
 //define('LOG_FILES_EXPIRE', 5); // for delete log files
 //define('BACKUP_FILES_EXPIRE', 10); // for delete backup files
