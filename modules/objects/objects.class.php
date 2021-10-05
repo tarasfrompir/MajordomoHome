@@ -774,7 +774,7 @@ class objects extends module
         if (!isset($value['VALUE'])) {
 			$value['VALUE'] = false;
         }
-		
+		saveToCache('MJD:' . $this->object_title . '.' . $property, $value['VALUE']);
         return $value['VALUE'];
     }
 
