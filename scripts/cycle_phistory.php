@@ -1,13 +1,13 @@
 <?php
-// Цикл можно удалить история пишется напрямую...
-exit;
+
 chdir(dirname(__FILE__) . '/../');
 
 include_once("./config.php");
 include_once("./lib/loader.php");
 
 set_time_limit(0);
-
+// если история фильтруется то не нужен цикл
+if (defined('SETINGS_SYSTEMFILTER_HYSTORY') and (SETINGS_SYSTEMFILTER_HYSTORY == 1 )) exit;
 include_once("./load_settings.php");
 include_once(DIR_MODULES . "control_modules/control_modules.class.php");
 $ctl = new control_modules();
@@ -118,7 +118,7 @@ while (1) {
                     debug_echo(" Insert same new value ".$h['VALUE_ID']);
                     $h = array();
                     $h['VALUE_ID'] = $q_rec['VALUE_ID'];
-                    $h['ADDED'] = $q_rec['ADDED'];
+                    //$h['ADDED'] = $q_rec['ADDED'];
                     $h['VALUE'] = $value;
                     $h['SOURCE'] = $q_rec['SOURCE'];
                     $h['ID'] = SQLInsert($table_name, $h);
