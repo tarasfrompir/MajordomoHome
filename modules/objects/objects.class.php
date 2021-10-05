@@ -350,6 +350,7 @@ class objects extends module
             return true;
             //$this->keep_history=$rec['KEEP_HISTORY'];
         } else {
+			DebMes('Wrong object id ' . $id . ' object is not present', 'errors');
             return false;
         }
 
@@ -549,8 +550,8 @@ class objects extends module
         $params['raiseEvent'] = $raiseEvent ?? false;
         $params['m_c_s'] = $call_stack ?? false;
         $params['r_s_m'] = $run_SafeMethod ?? false;
-        if (IsSet($_SERVER['REQUEST_URI']) && ($_SERVER['REQUEST_URI'] != '') && ((!$raiseEvent && $run_SafeMethod) || (defined('LOWER_BACKGROUND_PROCESSES') && LOWER_BACKGROUND_PROCESSES == 1))) {
-            $result = $this->callMethod($name, $params);
+        if (IsSet($_SERVER['REQUEST_URI']) && ($_SERVER['REQUEST_URI'] != '') && (!$raiseEvent && $run_SafeMethod)) {
+            $result = $this->callMethod($this->object_title . '.' . $name, $params);
         } else {
             $params['r_s_m'] = 1;
             $result = callAPI('/api/method/' . urlencode($this->object_title . '.' . $name), 'GET', $params);
@@ -568,6 +569,7 @@ class objects extends module
      */
     function callMethod($name, $params = 0, $parentClassId = 0)
     {
+		if (!$this->object_title) return false;
 
         if (!$parentClassId) {
             verbose_log("Method [" . $this->object_title . ".$name] (" . (is_array($params) ? json_encode($params) : '') . ")");
@@ -603,9 +605,7 @@ class objects extends module
             } else {
                 $source = 'unknown';
             }
-            if (strlen($source) > 250) {
-                $source = substr($source, 0, 250) . '...';
-            }
+
             $update_rec['EXECUTED_SRC'] = $source;
 
 
@@ -631,13 +631,13 @@ class objects extends module
             if ($method['OBJECT_ID'] && $method['CALL_PARENT'] == 1) {
                 // call class method
                 startMeasure('callParentMethod');
-                $parent_success = $this->callMethod($name, $params, $this->class_id);
+                $parent_success = $this->callMethod($this->object_title.'.'.$name, $params, $this->class_id);
                 endMeasure('callParentMethod');
             } elseif ($method['CALL_PARENT'] == 1) {
                 $parentClass = SQLSelectOne("SELECT ID, PARENT_ID FROM classes WHERE ID=" . (int)$parentClassId);
                 if ($parentClass['PARENT_ID']) {
                     startMeasure('callParentMethod');
-                    $parent_success = $this->callMethod($name, $params, $parentClass['PARENT_ID']);
+                    $parent_success = $this->callMethod($this->object_title.'.'.$name, $params, $parentClass['PARENT_ID']);
                     endMeasure('callParentMethod');
                 }
             }
@@ -709,12 +709,8 @@ class objects extends module
      */
     function getPropertyByName($name, $class_id, $object_id)
     {
-		$name = trim($name);
-        $cached_value = checkFromCache('P:' . $class_id . '.' . $object_id . '.' . $name);
-        if ($cached_value !== false) {
-            return $cached_value;
-        }
-
+		if (!$this->object_title) return false;
+	   	$name = trim($name);
         $rec = SQLSelectOne("SELECT ID FROM properties WHERE OBJECT_ID='" . (int)$object_id . "' AND TITLE = '" . DBSafe($name) . "'");
         if (isset($rec['ID'])) {
             return $rec['ID'];
@@ -728,7 +724,7 @@ class objects extends module
         }
         $prop = array();
         $prop['OBJECT_ID'] = $object_id;
-        $prop['TITLE'] = $property;
+        $prop['TITLE'] = $name;
 		$prop['KEEP_HISTORY'] = 0;
 		$prop['CLASS_ID'] = $class_id;
 		$prop['DESCRIPTION'] = 'Created by function getPropertyByName';
@@ -759,42 +755,26 @@ class objects extends module
         } elseif ($property == 'object_id') {
             return $this->id;
         } elseif ($property == 'class_title') {
-            return $this->class_title;
-        }
-
-        if (!$cache_checked) {
-            $cached_value = checkFromCache('MJD:' . $this->object_title . '.' . $property);
-            if ($cached_value !== false) {
-                return $cached_value;
-            }
+            return $this->class_title; 
+        } elseif ($property == 'location_title') {
+            $value = current(SQLSelectOne("SELECT TITLE FROM locations WHERE ID=" . (int)$this->location_id));
+            return $value['TITLE'];
         }
         startMeasure('getProperty (' . $property . ')', 1);
 		
+        $cached_value = checkFromCache('MJD:' . $this->object_title . '.' . $property);
+        if ($cached_value !== false) {
+            return $cached_value;
+        }
+	
         $value = SQLSelectOne("SELECT VALUE FROM pvalues WHERE PROPERTY_NAME = '" . DBSafe($this->object_title . '.' . $property) . "'");
-        if (isset($value['VALUE'])) {
-            endMeasure('getProperty (' . $property . ')', 1);
-            return $value['VALUE'];
-        }
-
-
-        if ($property == 'location_title') {
-            $value = current(SQLSelectOne("SELECT TITLE FROM locations WHERE ID=" . (int)$this->location_id));
-			endMeasure('getProperty (' . $property . ')', 1);
-            return $value;
-        }
-
-        $id = $this->getPropertyByName($property, $this->class_id, $this->id);
-
-        $value = SQLSelectOne("SELECT * FROM pvalues WHERE PROPERTY_ID='" . (int)$id . "' AND OBJECT_ID='" . (int)$this->id . "'");
-        if (!$value['PROPERTY_NAME'] && $this->object_title) {
-            $value['PROPERTY_NAME'] = $this->object_title . '.' . $property;
-            SQLUpdate('pvalues', $value);
-        }
-
+      
         endMeasure('getProperty (' . $property . ')', 1);
+		
         if (!isset($value['VALUE'])) {
-            $value['VALUE'] = false;
+			$value['VALUE'] = false;
         }
+		
         return $value['VALUE'];
     }
 
@@ -807,7 +787,7 @@ class objects extends module
      */
     function setProperty($property, $value, $no_linked = 0, $source = '')
     {
-
+		if (!$this->object_title) return false;
         startMeasure('setProperty');
         startMeasure('setProperty (' . $property . ')');
 
@@ -860,7 +840,7 @@ class objects extends module
                 if (is_null($value)) return false;
             }
 
-            $property = $prop['TITLE'];
+            //$property = $prop['TITLE'];
             startMeasure('setproperty_update_getvalue');
             $v = SQLSelectOne("SELECT * FROM pvalues WHERE PROPERTY_ID=" . (int)$id . " AND OBJECT_ID=" . (int)$this->id);
             endMeasure('setproperty_update_getvalue');
@@ -912,9 +892,7 @@ class objects extends module
 					$v['PROPERTY_ID'] = $id;
 					$v['OBJECT_ID'] = $this->id;
 				}
-			    if (!$v['PROPERTY_NAME']) {
-					$v['PROPERTY_NAME'] = $this->object_title . '.' . $property;
-				}
+			    if(!$v['PROPERTY_NAME']) $v['PROPERTY_NAME'] = $this->object_title . '.' . $property;
 				$v['VALUE'] = $value . '';
 				$v['SOURCE'] = $source . '';
 				$v['UPDATED'] = date('Y-m-d H:i:s');
@@ -926,14 +904,12 @@ class objects extends module
 				$v['PROPERTY_ID'] = $id;
 				$v['OBJECT_ID'] = $this->id;
 			}
-		    if (!$v['PROPERTY_NAME']) {
-				$v['PROPERTY_NAME'] = $this->object_title . '.' . $property;
-			}
+		    if(!$v['PROPERTY_NAME']) $v['PROPERTY_NAME'] = $this->object_title . '.' . $property;
 			$v['VALUE'] = $value . '';
 			$v['SOURCE'] = $source . '';
 			$v['UPDATED'] = date('Y-m-d H:i:s');
 			SQLUpdateInsert('pvalues', $v);
-		}		
+		}
         endMeasure('setproperty_update');
     
         $p_lower = strtolower($property);
