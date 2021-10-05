@@ -1,5 +1,6 @@
 <?php
-
+// run all exec command with api - cycle dont need
+exit;
 chdir(dirname(__FILE__) . '/../');
 
 include_once("./config.php");
@@ -15,30 +16,6 @@ while (1) {
     if (time() - $checked_time > 10) {
         $checked_time = time();
         echo date("H:i:s") . " Cycle " . basename(__FILE__) . ' is running ';
-    }
-
-    if ($exclusive = SQLSelectOne("SELECT * FROM safe_execs WHERE EXCLUSIVE = 1 ORDER BY PRIORITY DESC, ID")) {
-        if (IsWindowsOS()) {
-            $command = utf2win($exclusive['COMMAND']);
-        } else {
-            $command = $exclusive['COMMAND'];
-        }
-        SQLExec("DELETE FROM safe_execs WHERE ID = '" . $exclusive['ID'] . "'");
-        //DebMes("Executing (exclusive): " . $command,'execs');
-        try {
-            exec($command);
-        } catch (Exception $e) {
-            DebMes('Command - '. $command . '. Error: exception ' . get_class($e) . ', ' . $e->getMessage() ,'execs');
-        }    
-        if ($exclusive['ON_COMPLETE']) {
-            //DebMes("On complete code: ".$exclusive['ON_COMPLETE'], 'execs');
-            try {
-                eval($exclusive['ON_COMPLETE']);
-            } catch (Exception $e) {
-                DebMes('ON_COMPLETE command - '. $exclusive['ON_COMPLETE'] . ' for command - '.$command.' have error. Error: exception ' . get_class($e) . ', ' . $e->getMessage() ,'execs');
-            }
-        }
-        continue ;
     }
 
     if ($safe_execs = SQLSelectOne("SELECT * FROM safe_execs ORDER BY PRIORITY DESC, ID")) {
