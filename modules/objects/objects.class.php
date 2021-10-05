@@ -496,7 +496,7 @@ class objects extends module
         $this->callMethod($name, $params, 1);
     }
 
-    function callMethodSafe($name, $params = 0)
+    function callMethodSafe($name, $params = array())
     {
 		if (!$this->object_title) {
 			DebMes('Incorrect object title. Chek the correct name of object when called method safe with name - ' . $name, 'errors');
