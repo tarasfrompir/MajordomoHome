@@ -72,7 +72,7 @@ $offset_text = timezone_offset_string($offset);
 SQLExec("SET time_zone = '" . $offset_text . "';");
 
 
-if (isset($_SERVER['REQUEST_METHOD']) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'POST') &&
+/*if (isset($_SERVER['REQUEST_METHOD']) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'POST') &&
     !preg_match('/clear_all_history\.php/', $_SERVER['REQUEST_URI']) &&
     !preg_match('/diagnostic\.php/', $_SERVER['REQUEST_URI']) &&
     !preg_match('/\/ajax\//', $_SERVER['REQUEST_URI']) &&
@@ -108,7 +108,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && ($_SERVER['REQUEST_METHOD'] == 'GET' ||
         }
         exit;
     }
-}
+}*/
 
 
 // не нашел применения , может туплю ?
