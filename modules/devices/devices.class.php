@@ -1501,6 +1501,7 @@ class devices extends module
  devices: TYPE varchar(100) NOT NULL DEFAULT ''
  devices: LINKED_OBJECT varchar(100) NOT NULL DEFAULT ''
  devices: LOCATION_ID int(10) unsigned NOT NULL DEFAULT 0  
+ devices: LINKED_USER varchar(100) NOT NULL DEFAULT ''
  devices: FAVORITE int(3) unsigned NOT NULL DEFAULT 0 
  devices: SYSTEM_DEVICE int(3) unsigned NOT NULL DEFAULT 0
  devices: CLICKED datetime DEFAULT NULL
