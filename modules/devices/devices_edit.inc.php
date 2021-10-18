@@ -89,9 +89,7 @@ if ($this->tab == 'logic') {
     }
     $out['METHODS']=$methods;
 
-    $method_id = $object->getMethodByName($method_name, $object->class_id, $object->id);
-
-    $method_rec = SQLSelectOne("SELECT * FROM methods WHERE ID=" . (int)$method_id);
+    $method_rec = $object->getMethodByName($method_name, $object->class_id, $object->id);
 
     if ($method_rec['OBJECT_ID'] != $object->id) {
         $method_rec = array();
@@ -285,7 +283,7 @@ if ($this->tab == 'interface') {
     $total = count($menu_items);
     for ($i = 0; $i < $total; $i++) {
         $sub = SQLSelectOne("SELECT ID FROM commands WHERE PARENT_ID=" . $menu_items[$i]['ID']);
-        if ($sub['ID']) {
+        if ($sub) {
             $res_items[] = $menu_items[$i];
         }
     }
@@ -508,7 +506,7 @@ outHash($rec, $out);
 
 $types = array();
 foreach ($this->device_types as $k => $v) {
-    if ($v['TITLE']) {
+    if (isset($v['TITLE']) && $v['TITLE']) {
         $types[] = array('NAME' => $k, 'TITLE' => $v['TITLE']);
     }
     if ($k==$rec['TYPE'] && $rec['TYPE']!='') {

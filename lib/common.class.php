@@ -750,8 +750,27 @@ function safe_exec($command, $exclusive = 0, $priority = 0, $on_complete = '')
     $rec['PRIORITY'] = (int)$priority;
     $rec['ON_COMPLETE'] = $on_complete;
 
-    $rec['ID'] = SQLInsert('safe_execs', $rec);
-    return $rec['ID'];
+    $result = callAPI('/api/function/full_exec', 'GET', $rec);
+    return $result;
+}
+
+function full_exec($params = array())
+{
+    if (IsWindowsOS()) {
+        $command = utf2win($params['COMMAND']);
+    } else {
+        $command = $params['COMMAND'];
+    }
+	DebMes('o k ' . $command);
+    execInBackground($command);
+    if ($params['ON_COMPLETE']) {
+		$on_complete = $params['ON_COMPLETE'];
+        try {
+            eval($on_complete);
+        } catch (Exception $e) {
+            DebMes('ON_COMPLETE command - '. $on_complete . ' for command - '.$command.' have error. Error: exception ' . get_class($e) . ', ' . $e->getMessage() ,'execs');
+        }
+    }
 }
 
 /**
@@ -765,12 +784,7 @@ function execInBackground($cmd)
         //pclose(popen("start /B ". $cmd, "r"));
         try {
             //pclose(popen("start /B ". $cmd, "r"));
-            if (class_exists('COM')) {
-                $WshShell = new COM("WScript.Shell");
-                $oExec = $WshShell->Run("cmd /C \"" . $cmd . "\"", 0, false);
-            } else {
-                system($cmd);
-            }
+            $result = passthru($cmd);
         } catch (Exception $e) {
             DebMes('Error: exception ' . get_class($e) . ', ' . $e->getMessage() . '.');
         }
@@ -781,6 +795,7 @@ function execInBackground($cmd)
             DebMes('Error: exception ' . get_class($e) . ', ' . $e->getMessage() . '.');
         }
     }
+	return $result;
 }
 
 /**
@@ -847,7 +862,7 @@ function registerError($code = 'custom', $details = '')
     $e = new \Exception;
     $backtrace = $e->getTraceAsString();
 
-    DebMes("Error registered (type: $code):\n" . $details . "\nBacktrace:\n" . $backtrace, 'error');
+    DebMes("Error registered (type: $code):\n" . $details . "\nBacktrace:\n" . $backtrace, 'errors');
     $code = trim($code);
 
     if ($code == 'sql') {
@@ -1175,12 +1190,12 @@ function logAction($action_type,$details='') {
     global $session;
     $rec=array();
     $rec['ADDED']=date('Y-m-d H:i:s');
-    if ($session->data['SITE_USERNAME']) {
+    if (isset($session->data['SITE_USERNAME']) and $session->data['SITE_USERNAME']) {
         $rec['USER']=$session->data['SITE_USERNAME'];
     } elseif (preg_match('/^\/admin\.php/',$_SERVER['REQUEST_URI'])) {
         $rec['USER']='Control Panel';
     }
-    if ($session->data['TERMINAL']) {
+    if (isset($session->data['TERMINAL']) and $session->data['TERMINAL']) {
         $rec['TERMINAL']=$session->data['TERMINAL'];
     } else {
         $rec['TERMINAL']='';
