@@ -1,6 +1,6 @@
 <?php
 /**
- * Ukranian language file
+ * Ukranian language file 
  *
  * @package MajorDoMo
  * @author Serge Dzheigalo <jey@tut.by> http://smartliving.ru/
