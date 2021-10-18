@@ -435,6 +435,7 @@ if ($this->mode == 'update' && $this->tab == '') {
         $object_rec = SQLSelectOne("SELECT * FROM objects WHERE ID=" . $object_id);
         $object_rec['DESCRIPTION'] = $rec['TITLE'];
         $object_rec['LOCATION_ID'] = $rec['LOCATION_ID'];
+        $object_rec['LINKED_USER'] = $rec['LINKED_USER'];
         $class_changed = 0;
         
         $class_2b_changed = 1;
