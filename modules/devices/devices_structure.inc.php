@@ -37,7 +37,7 @@ $this->device_types=array(
             //'status'=>array('DESCRIPTION'=>LANG_DEVICES_STATUS, 'KEEP_HISTORY'=>365, 'ONCHANGE'=>'statusUpdated', 'DATA_KEY'=>1),
             //'alive'=>array('DESCRIPTION'=>'Alive'),
             //'aliveTimeout'=>array('DESCRIPTION'=>LANG_DEVICES_ALIVE_TIMEOUT,'_CONFIG_TYPE'=>'num','_CONFIG_HELP'=>'SdAliveTimeout'),
-            //'linkedRoom'=>array('DESCRIPTION'=>'LinkedRoom'),
+            'linkedRoom'=>array('DESCRIPTION'=>'LinkedRoom'),
             //'updated'=>array('DESCRIPTION'=>'Updated Timestamp'),
         ),
         'METHODS'=>array(
