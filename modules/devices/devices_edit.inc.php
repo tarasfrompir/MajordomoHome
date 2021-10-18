@@ -5,8 +5,14 @@
 if ($this->owner->name == 'panel') {
     $out['CONTROLPANEL'] = 1;
 }
+
+$out['USER'] = SQLSelect("SELECT ID, USERNAME FROM users ORDER BY USERNAME+0");
+
 $table_name = 'devices';
 $rec = SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
+if (isset($rec['LINKED_USER'])){
+    $out['USER_NAME'] = processTitle($rec['LINKED_USER']);
+}
 if (!$id && gr('linked_object')) {
     $rec = SQLSelectOne("SELECT * FROM $table_name WHERE LINKED_OBJECT='" . DBSafe(gr('linked_object')) . "'");
 }
@@ -355,7 +361,7 @@ if ($this->mode == 'update' && $this->tab == '') {
         $out['ERR_TITLE'] = 1;
         $ok = 0;
     }
-
+    $out['USER_NAME'] = gr('user');
     $rec['ALT_TITLES'] = gr('alt_titles', 'trim');
 
     $rec['TYPE'] = $type;
@@ -366,7 +372,7 @@ if ($this->mode == 'update' && $this->tab == '') {
 
     global $location_id;
     $rec['LOCATION_ID'] = (int)$location_id;
-
+    
     if (gr('favorite', 'int')) {
         $rec['FAVORITE'] = gr('favorite_priority', 'int');
     } else {
@@ -391,7 +397,8 @@ if ($this->mode == 'update' && $this->tab == '') {
     if ($add_object) {
         $rec['LINKED_OBJECT'] = '';
     }
-
+    
+    $rec['LINKED_USER'] = gr('user');
 
     //UPDATING RECORD
     if ($ok) {
