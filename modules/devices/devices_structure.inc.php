@@ -1,6 +1,18 @@
 <?php
 
 $this->device_types=array(
+    'users'=>array(
+        'CLASS'=>'Users',
+        'DESCRIPTION'=>'Пользователи системы',
+        'PROPERTIES'=>array(
+            'coordinates'=>array('DESCRIPTION'=>'Координаты расположения пользователя'),
+        ),
+        'METHODS'=>array(
+            //'onActivity'=>array('DESCRIPTION'=>'Rooms Activity'),
+            //'onIdle'=>array('DESCRIPTION'=>'Rooms Idle'),
+            //'updateActivityStatus'=>array('DESCRIPTION'=>'Update activity status')
+        )
+    ),
     'rooms'=>array(
         'CLASS'=>'Rooms',
         'DESCRIPTION'=>'Rooms/Locations',
