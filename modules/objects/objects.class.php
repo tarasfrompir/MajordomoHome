@@ -337,6 +337,7 @@ class objects extends module
             }
             $this->description = $rec['DESCRIPTION'];
             $this->location_id = $rec['LOCATION_ID'];
+            $this->linked_user = $rec['LINKED_USER'];
             if (preg_match('/^sdevice(.+?)/', $rec['SYSTEM'], $m)) {
                 $this->device_id = $m[1];
             }
@@ -1142,7 +1143,7 @@ class objects extends module
  objects: CLASS_TITLE varchar(255) NOT NULL DEFAULT ''
  objects: DESCRIPTION text
  objects: LOCATION_ID int(10) NOT NULL DEFAULT '0'
- 
+ objects: LINKED_USER varchar(100) NOT NULL DEFAULT ''
 
  properties: ID int(10) unsigned NOT NULL auto_increment
  properties: CLASS_ID int(10) NOT NULL DEFAULT '0'
