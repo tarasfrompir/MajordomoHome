@@ -115,7 +115,7 @@ $this->device_types=array(
         ),
         'METHODS'=>array(
             'updateAdress'=>array('DESCRIPTION'=>'Обновление адреса при изменении координат'),
-            'updateStatus'=>array('DESCRIPTION'=>'Обновляет свойства устройства из сырых значений полученных файлом gps.php','_CONFIG_SHOW'=>1),
+            'updateStatus'=>array('DESCRIPTION'=>'Обновляет свойства устройства из сырых значений полученных файлом gps.php'),
             //'switch'=>array('DESCRIPTION'=>'Switch'),
         )
     ),
