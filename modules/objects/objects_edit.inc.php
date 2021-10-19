@@ -71,7 +71,6 @@ if ($this->mode == 'update') {
     //UPDATING RECORD
     if ($ok) {
         if ($rec['ID']) { // только так надро оставить и ни как не иначе - не сохраняются тогда новые обьекты
-			DebMes('zapis sdelana' );
 			DebMes($rec);
             SQLUpdate($table_name, $rec); // update
 
