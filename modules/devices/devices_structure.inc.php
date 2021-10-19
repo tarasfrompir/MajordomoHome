@@ -111,11 +111,11 @@ $this->device_types=array(
             'address'=>array('DESCRIPTION'=>'Адрес местонахождения устройства','KEEP_HISTORY'=>30),
             'speed'=>array('DESCRIPTION'=>'Скорость'),
             'battery'=>array('DESCRIPTION'=>'Батарея'),
-            'allproperties'=>array('DESCRIPTION'=>'Все свойства устройства'),
+            'allproperties'=>array('DESCRIPTION'=>'Все свойства устройства', 'ONCHANGE'=>'updateStatus'),
         ),
         'METHODS'=>array(
             'updateAdress'=>array('DESCRIPTION'=>'Обновление адреса при изменении координат'),
-            //'turnOff'=>array('DESCRIPTION'=>LANG_DEVICES_TURN_OFF,'_CONFIG_SHOW'=>1),
+            'updateStatus'=>array('DESCRIPTION'=>'Обновляет свойства устройства из сырых значений полученных файлом gps.php','_CONFIG_SHOW'=>1),
             //'switch'=>array('DESCRIPTION'=>'Switch'),
         )
     ),
