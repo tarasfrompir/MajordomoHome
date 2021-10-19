@@ -102,6 +102,23 @@ $this->device_types=array(
             //'switch'=>array('DESCRIPTION'=>'Switch'),
         )
     ),
+    'SMartPhones'=>array(
+        'CLASS'=>'SmartPhones',
+        'PARENT_CLASS'=>'SDevices',
+        'DESCRIPTION'=>'Seample smart phones',
+        'PROPERTIES'=>array(
+            'coordinates'=>array('DESCRIPTION'=>'Координаты расположения устройства','KEEP_HISTORY'=>30, 'ONCHANGE'=>'updateAdress'),
+            'address'=>array('DESCRIPTION'=>'Адрес местонахождения устройства','KEEP_HISTORY'=>30),
+            'speed'=>array('DESCRIPTION'=>'Скорость'),
+            'battery'=>array('DESCRIPTION'=>'Батарея'),
+            'allproperties'=>array('DESCRIPTION'=>'Все свойства устройства'),
+        ),
+        'METHODS'=>array(
+            'updateAdress'=>array('DESCRIPTION'=>'Обновление адреса при изменении координат'),
+            //'turnOff'=>array('DESCRIPTION'=>LANG_DEVICES_TURN_OFF,'_CONFIG_SHOW'=>1),
+            //'switch'=>array('DESCRIPTION'=>'Switch'),
+        )
+    ),
 );
 
 $addons_dir=dirname(__FILE__).'/addons';
