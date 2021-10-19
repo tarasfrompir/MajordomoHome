@@ -5,10 +5,11 @@ $this->device_types=array(
         'CLASS'=>'Users',
         'DESCRIPTION'=>'Пользователи системы',
         'PROPERTIES'=>array(
-            'coordinates'=>array('DESCRIPTION'=>'Координаты расположения пользователя','KEEP_HISTORY'=>10, 'ONCHANGE'=>'changeLocation'),
+            'coordinates'=>array('DESCRIPTION'=>'Координаты расположения пользователя','KEEP_HISTORY'=>10),
+            'address'=>array('DESCRIPTION'=>'Адрес расположения пользователя','KEEP_HISTORY'=>10),
         ),
         'METHODS'=>array(
-            'changeLocation'=>array('DESCRIPTION'=>'User change location'),
+            //'changeLocation'=>array('DESCRIPTION'=>'User change location'),
             //'onIdle'=>array('DESCRIPTION'=>'Rooms Idle'),
             //'updateActivityStatus'=>array('DESCRIPTION'=>'Update activity status')
         )
