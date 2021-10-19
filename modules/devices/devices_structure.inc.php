@@ -35,6 +35,7 @@ $this->device_types=array(
         'CLASS'=>'SDevices',
         'DESCRIPTION'=>'General Devices Class',
         'PROPERTIES'=>array(
+            'alive'=>array('DESCRIPTION'=>'Состояние устройства'),
             //'status'=>array('DESCRIPTION'=>LANG_DEVICES_STATUS, 'KEEP_HISTORY'=>365, 'ONCHANGE'=>'statusUpdated', 'DATA_KEY'=>1),
             //'alive'=>array('DESCRIPTION'=>'Alive'),
             //'aliveTimeout'=>array('DESCRIPTION'=>LANG_DEVICES_ALIVE_TIMEOUT,'_CONFIG_TYPE'=>'num','_CONFIG_HELP'=>'SdAliveTimeout'),
@@ -82,6 +83,21 @@ $this->device_types=array(
         ),
         'METHODS'=>array(
             //'turnOn'=>array('DESCRIPTION'=>LANG_DEVICES_TURN_ON,'_CONFIG_SHOW'=>1),
+            //'turnOff'=>array('DESCRIPTION'=>LANG_DEVICES_TURN_OFF,'_CONFIG_SHOW'=>1),
+            //'switch'=>array('DESCRIPTION'=>'Switch'),
+        )
+    ),
+    'GPSdevices'=>array(
+        'CLASS'=>'SGPS',
+        'PARENT_CLASS'=>'SDevices',
+        'DESCRIPTION'=>'GPS device',
+        'PROPERTIES'=>array(
+            'coordinates'=>array('DESCRIPTION'=>'Координаты расположения устройства','KEEP_HISTORY'=>14, 'ONCHANGE'=>'updateAdress'),
+            'address'=>array('DESCRIPTION'=>'Адрес местонахождения устройства','KEEP_HISTORY'=>14),
+            'speed'=>array('DESCRIPTION'=>'Скорость'),
+        ),
+        'METHODS'=>array(
+            'updateAdress'=>array('DESCRIPTION'=>'Обновление адреса при изменении координат'),
             //'turnOff'=>array('DESCRIPTION'=>LANG_DEVICES_TURN_OFF,'_CONFIG_SHOW'=>1),
             //'switch'=>array('DESCRIPTION'=>'Switch'),
         )
