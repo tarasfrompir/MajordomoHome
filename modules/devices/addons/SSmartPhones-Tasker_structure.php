@@ -6,7 +6,7 @@ $this->device_types['SmartPhonesTasker'] = array(
     'CLASS'=>'SmartPhonesTasker',
     'PROPERTIES'=>array(
         //'timeChek'=>array('DESCRIPTION'=>'Период опроса устройства в секундах','_CONFIG_TYPE'=>'text'),
-        //'deviceId'=>array('DESCRIPTION'=>'Код устройства','_CONFIG_TYPE'=>'text'),
+        'deviceTId'=>array('DESCRIPTION'=>'Код устройства отправляемого таскером','_CONFIG_TYPE'=>'text'),
         //'d'=>array('DESCRIPTION'=>'Дата обновления статуса'),
         //'t'=>array('DESCRIPTION'=>'Время обновления статуса'),
         //'altitude'=>array('DESCRIPTION'=>'Высота'),
