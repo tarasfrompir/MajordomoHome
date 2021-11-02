@@ -5,8 +5,14 @@
 if ($this->owner->name == 'panel') {
     $out['CONTROLPANEL'] = 1;
 }
+
+$out['USER'] = SQLSelect("SELECT ID, USERNAME FROM users ORDER BY USERNAME+0");
+
 $table_name = 'devices';
 $rec = SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
+if (isset($rec['LINKED_USER'])){
+    $out['USER_NAME'] = processTitle($rec['LINKED_USER']);
+}
 if (!$id && gr('linked_object')) {
     $rec = SQLSelectOne("SELECT * FROM $table_name WHERE LINKED_OBJECT='" . DBSafe(gr('linked_object')) . "'");
 }
@@ -89,9 +95,7 @@ if ($this->tab == 'logic') {
     }
     $out['METHODS']=$methods;
 
-    $method_id = $object->getMethodByName($method_name, $object->class_id, $object->id);
-
-    $method_rec = SQLSelectOne("SELECT * FROM methods WHERE ID=" . (int)$method_id);
+    $method_rec = $object->getMethodByName($method_name, $object->class_id, $object->id);
 
     if ($method_rec['OBJECT_ID'] != $object->id) {
         $method_rec = array();
@@ -285,7 +289,7 @@ if ($this->tab == 'interface') {
     $total = count($menu_items);
     for ($i = 0; $i < $total; $i++) {
         $sub = SQLSelectOne("SELECT ID FROM commands WHERE PARENT_ID=" . $menu_items[$i]['ID']);
-        if ($sub['ID']) {
+        if ($sub) {
             $res_items[] = $menu_items[$i];
         }
     }
@@ -357,7 +361,7 @@ if ($this->mode == 'update' && $this->tab == '') {
         $out['ERR_TITLE'] = 1;
         $ok = 0;
     }
-
+    $out['USER_NAME'] = gr('user');
     $rec['ALT_TITLES'] = gr('alt_titles', 'trim');
 
     $rec['TYPE'] = $type;
@@ -368,7 +372,7 @@ if ($this->mode == 'update' && $this->tab == '') {
 
     global $location_id;
     $rec['LOCATION_ID'] = (int)$location_id;
-
+    
     if (gr('favorite', 'int')) {
         $rec['FAVORITE'] = gr('favorite_priority', 'int');
     } else {
@@ -393,7 +397,8 @@ if ($this->mode == 'update' && $this->tab == '') {
     if ($add_object) {
         $rec['LINKED_OBJECT'] = '';
     }
-
+    
+    $rec['LINKED_USER'] = gr('user');
 
     //UPDATING RECORD
     if ($ok) {
@@ -430,6 +435,7 @@ if ($this->mode == 'update' && $this->tab == '') {
         $object_rec = SQLSelectOne("SELECT * FROM objects WHERE ID=" . $object_id);
         $object_rec['DESCRIPTION'] = $rec['TITLE'];
         $object_rec['LOCATION_ID'] = $rec['LOCATION_ID'];
+        $object_rec['LINKED_USER'] = $rec['LINKED_USER'];
         $class_changed = 0;
         
         $class_2b_changed = 1;
@@ -508,7 +514,7 @@ outHash($rec, $out);
 
 $types = array();
 foreach ($this->device_types as $k => $v) {
-    if ($v['TITLE']) {
+    if (isset($v['TITLE']) && $v['TITLE']) {
         $types[] = array('NAME' => $k, 'TITLE' => $v['TITLE']);
     }
     if ($k==$rec['TYPE'] && $rec['TYPE']!='') {

@@ -1,5 +1,6 @@
 <?php
-
+// example
+// run all function with api $result = callAPI('/api/function/full_exec', 'GET', $rec);
 include_once("./config.php");
 
 if (isset($argv[0]) && $argv[0]!='') {
@@ -368,6 +369,14 @@ if (!isset($request[0])) {
     }
 } elseif (strtolower($request[0]) == 'method' && isset($request[1])) {
     $res = callMethod($request[1], $_GET);
+    if (!is_null($res)) {
+        $result['result'] = $res;
+    } else {
+        $result['result'] = 'OK';
+    }
+} elseif (strtolower($request[0]) == 'function' && isset($request[1])) {
+	$func = $request[1];
+    $res = $func($_GET);
     if (!is_null($res)) {
         $result['result'] = $res;
     } else {
