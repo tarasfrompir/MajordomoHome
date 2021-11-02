@@ -1547,7 +1547,7 @@ $dictionary = array (
 	'NEWDASH_DMB_TITLE_MODAL' => 'Добавляння свого блоку',
 	'NEWDASH_DMB_TITLE_MODAL_HINT' => 'Описание функционала и подробное описание доступно на нашем форуме:',
 	'NEWDASH_DMB_TITLE_MODAL_HINT_FORUM' => 'перейти на форум',
-	'NEWDASH_DMB_TITLE_MODAL_STEP1' => '1. Створіть сценарій з ім\`ям:',
+	'NEWDASH_DMB_TITLE_MODAL_STEP1' => '1. Створіть сценарій з ім`ям:',
 	'NEWDASH_DMB_TITLE_MODAL_STEP2' => '2. Сценарій повинен віддавати слідуючий JSON об\`єкт:',
 	'NEWDASH_DMB_TITLE_MODAL_STEP3' => '3. На цьому все. Панель керування сама підхватить скрипт и выведе содержимое на головну сторінку.',
 	
