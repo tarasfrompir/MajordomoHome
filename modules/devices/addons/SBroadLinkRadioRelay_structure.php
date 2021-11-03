@@ -7,6 +7,7 @@ $this->device_types['RadioRelayControlableBroadlink'] = array(
     'DESCRIPTION'=>'Устройства управляемые по радио или IR шлюзом Broadlink',
     'PROPERTIES'=>array(
         //'timeChek'=>array('DESCRIPTION'=>'Период опроса устройства в секундах','_CONFIG_TYPE'=>'text'),
+        'ipContrDev'=>array('DESCRIPTION'=>'IP управляющего шлюза Broadlink','_CONFIG_TYPE'=>'text'),
         'codeOn'=>array('DESCRIPTION'=>'Код для включение устройства','_CONFIG_TYPE'=>'text'),
         'codeOff'=>array('DESCRIPTION'=>'Код для выключение устройства','_CONFIG_TYPE'=>'text'),
         //'allproperties'=>array('DESCRIPTION'=>'Все свойства устройства'),
