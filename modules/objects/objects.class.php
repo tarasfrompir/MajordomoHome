@@ -997,7 +997,7 @@ class objects extends module
 		if (defined('SETTINGS_SYSTEMFILTER_WEBSOCKET') and (SETTINGS_SYSTEMFILTER_WEBSOCKET == 1)) {
 			if ($old_value !== $value) {
 				startMeasure('setproperty_postwebsocketqueue');
-				postToWebSocketQueue($this->object_title . '.' . $property, $value);
+				postToWebSocket($this->object_title . '.' . $property, $value);
 				endMeasure('setproperty_postwebsocketqueue');
 			}
 		} else {
