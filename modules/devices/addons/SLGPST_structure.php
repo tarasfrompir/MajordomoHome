@@ -4,6 +4,7 @@ $this->device_types['LiveGPSTraker'] = array(
     'TITLE'=>'LiveGPSTraker',
     'PARENT_CLASS'=>'SGPS',
     'CLASS'=>'SLGPST',
+    'DESCRIPTION'=>'Устройства использующие модуль GPS с сайта http://livegpstracks.com/',
     'PROPERTIES'=>array(
         'timeChek'=>array('DESCRIPTION'=>'Период опроса устройства в секундах','_CONFIG_TYPE'=>'text'),
         'deviceId'=>array('DESCRIPTION'=>'Код устройства','_CONFIG_TYPE'=>'text'),
