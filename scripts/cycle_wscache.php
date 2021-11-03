@@ -1,13 +1,14 @@
 <?php
 chdir(dirname(__FILE__) . '/../');
-// если история фильтруется то не нужен цикл
-if (defined('SETTINGS_SYSTEMFILTER_WEBSOCKET') and (SETTINGS_SYSTEMFILTER_WEBSOCKET == 1)) exit;
 include_once("./config.php");
 include_once("./lib/loader.php");
 
 set_time_limit(0);
 
 include_once("./load_settings.php");
+
+// если история фильтруется то не нужен цикл
+if (defined('SETTINGS_SYSTEMFILTER_WEBSOCKET') and (SETTINGS_SYSTEMFILTER_WEBSOCKET == 1)) exit;
 
 if (defined('DISABLE_WEBSOCKETS') && DISABLE_WEBSOCKETS==1) {
    echo "Web-sockets disabled\n";
