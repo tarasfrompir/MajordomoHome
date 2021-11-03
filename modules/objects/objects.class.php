@@ -834,7 +834,7 @@ class objects extends module
             endMeasure('setproperty_update_getvalue');
             $old_value = $v['VALUE'];
 
-            if ($prop['DATA_TYPE'] == 5 && $value != $old_value) { // image
+            if ($prop['DATA_TYPE'] == 5 && $value !== $old_value) { // image
                 $path_parts = pathinfo($value);
                 $extension = strtolower($path_parts['extension']);
                 if ($extension != 'jpg' && $extension != 'jpeg' && $extension != 'png' && $extension != 'gif') {
