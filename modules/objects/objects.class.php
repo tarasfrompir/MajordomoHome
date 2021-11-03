@@ -994,7 +994,7 @@ class objects extends module
 		}
 		
 		// фильтрование передачи данных в вебсокеты
-		if (defined('SETTINGS_SYSTEMFILTER_WEBSOCKET') and SETTINGS_SYSTEMFILTER_WEBSOCKET == 1) {
+		if (defined('SETTINGS_SYSTEMFILTER_WEBSOCKET') and (SETTINGS_SYSTEMFILTER_WEBSOCKET == 1)) {
 			if ($old_value !== $value) {
 				startMeasure('setproperty_postwebsocketqueue');
 				postToWebSocketQueue($this->object_title . '.' . $property, $value);
