@@ -1,6 +1,7 @@
 <?php
 chdir(dirname(__FILE__) . '/../');
-
+// если история фильтруется то не нужен цикл
+if (defined('SETTINGS_SYSTEMFILTER_WEBSOCKET') and (SETTINGS_SYSTEMFILTER_WEBSOCKET == 1)) exit;
 include_once("./config.php");
 include_once("./lib/loader.php");
 
