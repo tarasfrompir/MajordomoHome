@@ -238,7 +238,7 @@ $restart_threads=array();
 
 while (True) {
     // chek the cycles and set status if hung каждые 5 минут
-    if ((time() - $last_cycles_control_cycle) >= 5*60) {
+    if ((time() - $last_cycles_control_cycle) >= 1*60) {
         $last_cycles_control_cycle = time();
         foreach ($cycles as $cycle) {
             // проверяем все запущенные циклы
