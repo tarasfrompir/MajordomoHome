@@ -246,6 +246,11 @@
     background-size: cover;
 }
 
+.device-icon.lgpst {
+    background-image: url(../cms/icons/gps.png); 100% 100% no-repeat; /* Добавляем фон */
+    background-size: cover;
+}
+
 .device-icon.humidity {
     background-image: url(../cms/scenes/styles/informer/i_humidity.png);
 }
