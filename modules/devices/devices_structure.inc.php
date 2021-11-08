@@ -39,13 +39,13 @@ $this->device_types=array(
             'alive'=>array('DESCRIPTION'=>'Состояние устройства'),
             'linkedRoom'=>array('DESCRIPTION'=>'Местоположение устройства'),
             //'status'=>array('DESCRIPTION'=>LANG_DEVICES_STATUS, 'KEEP_HISTORY'=>365, 'ONCHANGE'=>'statusUpdated', 'DATA_KEY'=>1),
-            //'aliveTimeout'=>array('DESCRIPTION'=>LANG_DEVICES_ALIVE_TIMEOUT,'_CONFIG_TYPE'=>'num','_CONFIG_HELP'=>'SdAliveTimeout'),
-            //'updated'=>array('DESCRIPTION'=>'Updated Timestamp'),
+            'aliveTimeout'=>array('DESCRIPTION'=>LANG_DEVICES_ALIVE_TIMEOUT,'_CONFIG_TYPE'=>'num','_CONFIG_HELP'=>'SdAliveTimeout'),
+            'updated'=>array('DESCRIPTION'=>'Updated Timestamp', 'ONCHANGE'=>'keepAlive'),
         ),
         'METHODS'=>array(
             //'statusUpdated'=>array('DESCRIPTION'=>'Status updated event'),
             //'logicAction'=>array('DESCRIPTION'=>'Logic Action'),
-            //'keepAlive'=>array('DESCRIPTION'=>'Alive update'),
+            'keepAlive'=>array('DESCRIPTION'=>'Alive update'),
         ),
         'INJECTS'=>array(
             'OperationalModes'=>array(
@@ -94,8 +94,8 @@ $this->device_types=array(
         'PARENT_CLASS'=>'SDevices',
         'DESCRIPTION'=>'GPS device',
         'PROPERTIES'=>array(
-            'coordinates'=>array('DESCRIPTION'=>'Координаты расположения устройства','KEEP_HISTORY'=>14, 'ONCHANGE'=>'updateAdress'),
-            'address'=>array('DESCRIPTION'=>'Адрес местонахождения устройства','KEEP_HISTORY'=>14),
+            'coordinates'=>array('DESCRIPTION'=>'Координаты расположения устройства','KEEP_HISTORY'=>30, 'ONCHANGE'=>'updateAdress'),
+            'address'=>array('DESCRIPTION'=>'Адрес местонахождения устройства'),
             'speed'=>array('DESCRIPTION'=>'Скорость'),
         ),
         'METHODS'=>array(
@@ -110,7 +110,7 @@ $this->device_types=array(
         'DESCRIPTION'=>'Seample smart phones',
         'PROPERTIES'=>array(
             'coordinates'=>array('DESCRIPTION'=>'Координаты расположения устройства','KEEP_HISTORY'=>30, 'ONCHANGE'=>'updateAdress'),
-            'address'=>array('DESCRIPTION'=>'Адрес местонахождения устройства','KEEP_HISTORY'=>30),
+            'address'=>array('DESCRIPTION'=>'Адрес местонахождения устройства'),
             'speed'=>array('DESCRIPTION'=>'Скорость'),
             'battery'=>array('DESCRIPTION'=>'Батарея'),
             'allproperties'=>array('DESCRIPTION'=>'Все свойства устройства', 'ONCHANGE'=>'updateStatus'),

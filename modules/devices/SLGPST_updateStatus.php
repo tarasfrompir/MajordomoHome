@@ -11,7 +11,7 @@ if (strval($old_content) != strval($content)) {
     //DebMes($this);
 
 }
-
+$this->setProperty('updated', time());
 // Тут надо вызывать по таймеру этот метод
 if (!$time_to_chek =  $this->getProperty('timeChek') ) $time_to_chek = 60;
 SetTimeOut("Restart timer for traker GPS ".$this->object_title,"callMethod('".$this->object_title.".updateStatus');", $time_to_chek );
