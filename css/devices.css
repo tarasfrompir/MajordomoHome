@@ -1,8 +1,9 @@
 .device-widget {
-    min-width:250px;
-    max-width:350px;
+    width:270px;
+    min-width:270px;
+    max-width:270px;
+    border: 2px solid transparent;
     padding:5px;
-    border:1px solid transparent;
 
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -11,6 +12,11 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
+
+.device-widget.offline {
+    background-color:#aaaaaa;
+}
+
 
 .device-widget.mini {
     padding:5px;
@@ -44,10 +50,6 @@
     width:75px;
 }
 
-.device-widget.offline {
-    background-color:#aaaaaa;
-}
-
 .device-widget.warning {
     border:1px solid red;
 }
@@ -71,7 +73,7 @@
 }
 
 .device-header {
-    font-size:18px;
+    font-size:16px;
 }
 
 .device-widget.controller, .device-widget.sensor, .device-widget.button {
@@ -98,6 +100,24 @@
 
 .device-details {
     font-size:11px;
+}
+.device-details.blue {
+    color: blue;
+}
+.device-details.red {
+    color: red;
+}
+.device-details.green {
+    color: green;
+}
+.device-details.yellow {
+    color: yellow;
+}
+.device-details.cyan {
+    color: cyan;
+}
+.device-details.magenta {
+    color: magenta;
 }
 
 .device-icon.thermostat {
@@ -221,6 +241,11 @@
 .device-icon.temperature {
     background-image: url(../cms/scenes/styles/informer/i_temp.png);
 }
+.device-icon.tasker {
+    background-image: url(../cms/icons/tasker.png); 100% 100% no-repeat; /* Добавляем фон */
+    background-size: cover;
+}
+
 .device-icon.humidity {
     background-image: url(../cms/scenes/styles/informer/i_humidity.png);
 }
