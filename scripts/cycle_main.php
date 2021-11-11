@@ -122,10 +122,10 @@ while (1) {
         ///// call methods for update stutus
         $i = 0;
         foreach ($Update_Status_objects as $object) {
-            if ($checked_time - $object['UPDATED'] + $object['TIMECHEK']*60 > 0) {
+            if ($checked_time - $object['UPDATED'] - $object['TIMECHEK']*60 > 0) {
                 setGlobal($object['TITLE'].'.updated', $checked_time);
                 $Update_Status_objects[$i]['UPDATED'] = $checked_time;
-                DebMes('set time updated for ' . $object['TITLE'].'.updated');
+                //DebMes('set time updated for ' . $object['TITLE'].'.updated');
             }
             $i = $i+1;
         }
