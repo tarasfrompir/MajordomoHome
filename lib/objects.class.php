@@ -494,13 +494,13 @@ function getObjectsByClass($class_name)
         return 0;
     }
 
-    $sqlQuery = "SELECT ID, TITLE
+    $sqlQuery = "SELECT *
                   FROM objects
                  WHERE CLASS_ID = '" . $class_record['ID'] . "'";
 
     $objects = SQLSelect($sqlQuery);
 
-    $sqlQuery = "SELECT ID, TITLE
+    $sqlQuery = "SELECT *
                   FROM classes WHERE PARENT_ID = '" . $class_record['ID'] . "'";
 
     $sub_classes = SQLSelect($sqlQuery);
