@@ -47,7 +47,29 @@ if (isset($_GET['onetime']) && $_GET['onetime']) {
 $old_date = date('Y-m-d');
 
 $checked_time = 0;
-
+$Update_Status_objects = getObjectsByClass('SDevices');
+$index = 0;
+foreach ($Update_Status_objects as $object) {
+    //DebMes(getGlobal($object['TITLE'].'.updated'));
+    $Update_Status_objects[$index]['UPDATED'] = intval(getGlobal($object['TITLE'].'.updated'));
+    $t = intval(getGlobal($object['TITLE'].'.timeChek'));
+    if ($t < 1) $t=1;
+    $Update_Status_objects[$index]['TIMECHEK'] = $t;
+    $index = $index + 1;
+}
+//DebMes($Update_Status_objects);
+/*
+"ID": "1736",
+"TITLE": "LiveGPSTraker01",
+"CLASS_ID": "266",
+"DESCRIPTION": "GPS Lanos",
+"LOCATION_ID": "0",
+"KEEP_HISTORY": "0",
+"SYSTEM": "sdevice75",
+"CLASS_TITLE": "SLGPST",
+"LINKED_USER": "Lanos"
+},
+*/
 while (1) {
     if (time() - $checked_time > 5) {
         $checked_time = time();
@@ -97,6 +119,17 @@ while (1) {
             raiseEvent($objects[$i]['TITLE'] . '.onNewMinute');
         }
         $old_minute = $m;
+        ///// call methods for update stutus
+        $i = 0;
+        foreach ($Update_Status_objects as $object) {
+            if ($checked_time - $object['UPDATED'] + $object['TIMECHEK']*60 > 0) {
+                setGlobal($object['TITLE'].'.updated', $checked_time);
+                $Update_Status_objects[$i]['UPDATED'] = $checked_time;
+                DebMes('set time updated for ' . $object['TITLE'].'.updated');
+            }
+            $i = $i+1;
+        }
+        /// end
     }
 
     #NewHour
