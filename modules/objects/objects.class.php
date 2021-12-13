@@ -1155,6 +1155,7 @@ class objects extends module
  objects: CLASS_TITLE varchar(255) NOT NULL DEFAULT ''
  objects: DESCRIPTION text
  objects: LOCATION_ID int(10) NOT NULL DEFAULT '0'
+ objects: LOCATION_TITLE varchar(255) NOT NULL DEFAULT ''
  objects: LINKED_USER varchar(100) NOT NULL DEFAULT ''
 
  properties: ID int(10) unsigned NOT NULL auto_increment
