@@ -337,6 +337,7 @@ class objects extends module
             }
             $this->description = $rec['DESCRIPTION'];
             $this->location_id = $rec['LOCATION_ID'];
+	    $this->location_title = $rec['LOCATION_TITLE'];
             $this->linked_user = $rec['LINKED_USER'];
             if (preg_match('/^sdevice(.+?)/', $rec['SYSTEM'], $m)) {
                 $this->device_id = $m[1];
