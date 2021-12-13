@@ -1,0 +1,268 @@
+<!--
+[
+ 0   {
+        "did": "temperature",
+        "siid": 3,
+        "piid": 7,
+        "code": 0,
+        "value": 24.9
+    },
+  1  {
+        "did": "water_level",
+        "siid": 2,
+        "piid": 7,
+        "code": 0,
+        "value": 37
+    },
+   2 {
+        "did": "humidity",
+        "siid": 3,
+        "piid": 9,
+        "code": 0,
+        "value": 60
+    },
+3    {
+        "did": "speed_level",
+        "siid": 7,
+        "piid": 1,
+        "code": 0,
+        "value": 0
+    },
+4    {
+        "did": "power",
+        "siid": 2,
+        "piid": 1,
+        "code": 0,
+        "value": false
+    },
+5   {
+        "did": "mode",
+        "siid": 2,
+        "piid": 5,
+        "code": 0,
+        "value": 1
+    },
+6    {
+        "did": "led_brightnes",
+        "siid": 5,
+        "piid": 2,
+        "code": 0,
+        "value": 2
+    },
+ 7   {
+        "did": "clean_mode",
+        "siid": 7,
+        "piid": 5,
+        "code": 0,
+        "value": false
+    },
+    {
+        "did": "child_lock",
+        "siid": 6,
+8        "piid": 1,
+        "code": 0,
+        "value": false
+    },
+    {
+        "did": "power_time",
+        "siid": 7,
+  9      "piid": 3,
+        "code": 0,
+        "value": 689662
+    },
+    {
+        "did": "target_humidity",
+        "siid": 2,
+10        "piid": 6,
+        "code": 0,
+        "value": 50
+    },
+    {
+        "did": "dry",
+ 11       "siid": 2,
+        "piid": 8,
+        "code": 0,
+        "value": true
+    },
+    {
+        "did": "use_time",
+12        "piid": 9,
+        "code": 0,
+        "value": 2227628
+    },
+    {
+        "did": "button_pressed",
+13        "siid": 2,
+        "piid": 10,
+        "code": 0,
+        "value": 0
+    },
+    {
+        "did": "buzzer",
+        "siid": 4,
+14        "piid": 1,
+        "code": 0,
+        "value": false
+    },
+    {
+        "did": "actual_speed",
+ 15       "siid": 7,
+        "piid": 1,
+        "code": -4004
+    }
+]
+    -->
+    
+<script type="text/javascript">
+
+$(document).ready(function() {
+  //console.log(%.allproperties%);
+  var allpropertys = %.allproperties%;
+
+  var humidyty = allpropertys['result'][2]['value'];
+  if (humidyty<110) {
+    $('#humidyty%.object_id%').css('color', '#0099FF');
+  } else if (humidyty<100) {
+    $('#humidyty%.object_id%').css('color', '#0099FF');
+  } else if (humidyty<80) {
+    $('#humidyty%.object_id%').css('color', '#00CCFF');
+  } else if (humidyty<60) {
+    $('#humidyty%.object_id%').css('color', '#00FFFF');
+  } else if (humidyty<40) {
+    $('#humidyty%.object_id%').css('color', '#33FFFF');
+  } else {
+    $('#humidyty%.object_id%').css('color', '#66FFFF');
+  }
+  
+  var temperature = allpropertys['result'][0]['value'];
+  if (temperature > 32) {
+    $('#temp%.object_id%').css('color', '#EE1604');
+  } else if (temperature > 26) {
+    $('#temp%.object_id%').css('color', '#DA820A');
+  } else if (temperature > 22) {
+    $('#temp%.object_id%').css('color', '#DADA0A');
+  } else if (temperature > 16) {
+    $('#temp%.object_id%').css('color', '#95B90F');
+  } else if (temperature > 12) {
+    $('#temp%.object_id%').css('color', '#0FB91F');
+  } else if (temperature > 8) {
+    $('#temp%.object_id%').css('color', '#18E582');
+  } else if (temperature > 0) {
+    $('#temp%.object_id%').css('color', '#18DEE5');
+  } else {
+    $('#temp%.object_id%').css('color', '#0099FF');
+  }
+  
+  $('#temp%.object_id%').text(temperature + ' ' + String.fromCharCode(176) + 'C');
+  $('#humidyty%.object_id%').text(humidyty + ' %');
+  $('#waterLevel%.object_id%').text(Math.floor((allpropertys['result'][1]['value'])/125*100) + ' %');
+  $('#waterLevel%.object_id%').css('color', 'blue');
+  $('#targethumidyty%.object_id%').text(allpropertys['result'][10]['value'] + ' %')
+  
+  $('#wl%.object_id%').val(allpropertys['result'][1]['value']);
+  
+
+  // режим подсветки
+  if (allpropertys['result'][6]['value'] == 0) {
+    $('#ledb%.object_id%').css('color', '#18E582');
+    $('#ledb%.object_id%').text('Ночной режим');
+  } else if (allpropertys['result'][6]['value'] == 1) {
+    $('#ledb%.object_id%').css('color', '#18DEE5');
+     $('#ledb%.object_id%').text('Вечерний режим');
+  } else {
+    $('#ledb%.object_id%').css('color', '#0099FF');
+     $('#ledb%.object_id%').text('Дневной режим');
+  }
+  
+  
+  // режим mode
+  if (allpropertys['result'][5]['value'] == 0) {
+    $('#mode0%.object_id%').css('color', 'red');
+  } else if (allpropertys['result'][5]['value'] == 1) {
+    $('#mode1%.object_id%').css('color', 'red');
+  } else if (allpropertys['result'][5]['value'] == 2) {
+    $('#mode2%.object_id%').css('color', 'red');
+  } else {
+    $('#mode3%.object_id%').css('color', 'red');
+  }
+  
+    // режим ledb
+  if (allpropertys['result'][6]['value'] == 0) {
+    $('#ledb0%.object_id%').css('color', 'red');
+  } else if (allpropertys['result'][6]['value'] == 1) {
+    $('#ledb1%.object_id%').css('color', 'red');
+  } else {
+    $('#ledb2%.object_id%').css('color', 'red');
+  }
+  
+});
+</script>
+
+
+<div id="%.object_id%" class="device-widget %.alive|"offline;online"%">
+<div class="device-widget controller loadtype_%.loadType%" >
+<div class="device-icon %.state|"off;on"% icon%.object_id%_light" id="icon%.object_id%_light" style='%.icon|"background-image:url(%.icon%)"%'></div>
+<div class="device-header">%.object_description%</div>
+    <!-- вкл вікл устройства -->
+    <div class="device-details"> 
+        <button  style="%.state|"color:red;none;"%" onClick='changeState%.object_id%(0)'>Выкл.</button>
+        <button  style="%.state|"none;color:red;"%" onClick='changeState%.object_id%(1)'>Вкл.</button>
+    </div>
+    <!-- установка режима -->
+    <div class="device-details"> 
+        <button id="mode0%.object_id%" onClick='ajaxSetGlobal("%.object_title%.targetMode", 0);'>Авто.</button>
+        <button id="mode1%.object_id%" onClick='ajaxSetGlobal("%.object_title%.targetMode", 1);'>Мал.</button>
+        <button id="mode2%.object_id%" onClick='ajaxSetGlobal("%.object_title%.targetMode", 2);'>Сред.</button>
+        <button id="mode3%.object_id%" onClick='ajaxSetGlobal("%.object_title%.targetMode", 3);'>Сильн.</button>
+    </div>
+    <!-- установка подсветки -->
+    <div class="device-details"> 
+        <button id="ledb0%.object_id%" onClick='ajaxSetGlobal("%.object_title%.targetLedB", 0);'>Ночь.</button>
+        <button id="ledb1%.object_id%" onClick='ajaxSetGlobal("%.object_title%.targetLedB", 1);'>Вечер.</button>
+        <button id="ledb2%.object_id%" onClick='ajaxSetGlobal("%.object_title%.targetLedB", 2);'>День.</button>
+    </div>
+    <!-- установка влажности-->
+    <div class="device-details">
+        <input type="range" onChange='ajaxSetGlobal("%.object_title%.targetHumidity", value);' value=%.targetHumidity%  min="10" max="90" step="5" style="width: 175px; height: 25px; display: inline-block;" list="%.object_id%rangeList">%.targetHumidity%</input>
+        <datalist id="%.object_id%rangeList">
+            <option value="10" label="10">
+            <option value="20" label="20">
+            <option value="30" label="30">
+            <option value="40" label="40">
+            <option value="50" label="50">
+            <option value="60" label="60">
+            <option value="70" label="70">
+            <option value="80" label="80">
+            <option value="90" label="90">
+        </datalist>
+    </div>
+    <!-- Информация -->
+    <div class="device-details">Температура воздуха: <b>
+        <text id="temp%.object_id%"></text></b></div>
+    <div class="device-details">Влажность: <b>
+        <text id="humidyty%.object_id%"></text>
+    </b></div>
+    <div class="device-details">Уровень воды: <progress id="wl%.object_id%" max="100" ></progress> <b>
+        <text id="waterLevel%.object_id%"></text></b>
+    </div>
+    <div class="device-details">Целевая влажность: 
+        <text id="targethumidyty%.object_id%"></text>
+    </div> 
+    <div class="device-details">Режим работы подсветки: 
+        <text id="ledb%.object_id%"></text>
+        </div> 
+</div>
+</div>
+
+<script type="text/javascript">
+    function changeState%.object_id%(value) {
+        if (value==0) {
+            ajaxSetGlobal("%.object_title%.state", "0");
+        } else {
+            ajaxSetGlobal("%.object_title%.state", "1");
+            $(".icon%.object_id%_light").addClass("pressed");setTimeout("$(\".icon%.object_id%_light\").removeClass(\"pressed\");",300);
+        }
+        $.get("<#ROOTHTML#>ajax/devices.html?op=clicked&object="+encodeURIComponent("%.object_title%"));
+    }
+</script>
+
