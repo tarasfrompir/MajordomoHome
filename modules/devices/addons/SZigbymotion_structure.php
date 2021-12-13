@@ -14,7 +14,7 @@ $this->device_types['Zigbymotion'] = array(
         //'altitude'=>array('DESCRIPTION'=>'Высота'),
     ),
     'METHODS'=>array(
-		'updateDevice'=>array('DESCRIPTION'=>'Обновление всех свойств устройства из свойства activity','_CONFIG_SHOW'=>1),
+        'updateDevice'=>array('DESCRIPTION'=>'Обновление всех свойств устройства из свойства activity'),
         'updateStatus'=>array('DESCRIPTION'=>'Обновление статуса устройства','_CONFIG_SHOW'=>1),// обязателен для проверки обратной связи
         )
 );
