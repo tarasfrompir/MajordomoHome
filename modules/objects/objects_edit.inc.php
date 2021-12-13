@@ -70,8 +70,11 @@ if ($this->mode == 'update') {
     }
     //UPDATING RECORD
     if ($ok) {
+	if ($rec['LOCATION_ID']) {
+            $rec['LOCATION_TITLE'] = getRoomObjectByLocation($rec['LOCATION_ID'], 1);
+        }
         if ($rec['ID']) { // только так надро оставить и ни как не иначе - не сохраняются тогда новые обьекты
-			DebMes($rec);
+	    DebMes($rec);
             SQLUpdate($table_name, $rec); // update
 
             if ($class_changed_from) {
