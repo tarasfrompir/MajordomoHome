@@ -13,6 +13,6 @@ $this->device_types['SmartPhonesTasker'] = array(
         
     ),
     'METHODS'=>array(
-        //'updateStatus'=>array('DESCRIPTION'=>'Обновление статуса трекера','_CONFIG_SHOW'=>1),
+        //'updateStatus'=>array('DESCRIPTION'=>'Обновление статуса трекера','_CONFIG_SHOW'=>1),// обязателен для проверки обратной связи
         )
 );

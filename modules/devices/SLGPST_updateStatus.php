@@ -1,7 +1,12 @@
 <?php
+$this->setProperty('updated', time());
 $device_id = $this->getProperty('deviceId');
 $old_content = $this->getProperty('allproperties');
 $content=getURL('http://livegpstracks.com/viewer_coos_s.php?code='.$device_id,  0); 
+if (!$content) {
+    $this->setProperty('alive', 0);
+    return;
+}
 if (strval($old_content) != strval($content)) {
     $data=json_decode($content, true);
     //DebMes($content);
@@ -11,7 +16,4 @@ if (strval($old_content) != strval($content)) {
     //DebMes($this);
 
 }
-$this->setProperty('updated', time());
-// Тут надо вызывать по таймеру этот метод
-if (!$time_to_chek =  $this->getProperty('timeChek') ) $time_to_chek = 60;
-SetTimeOut("Restart timer for traker GPS ".$this->object_title,"callMethod('".$this->object_title.".updateStatus');", $time_to_chek );
+$this->setProperty('alive', 1);
