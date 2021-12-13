@@ -591,6 +591,7 @@ function getKeyData($object_id)
  */
 function getGlobal($varname)
 {
+    $varname = trim($varname);
     $tmp = explode('.', $varname);
 
     if (isset($tmp[2])) {
@@ -912,6 +913,7 @@ function getHistoryValue($varname, $time, $nerest = false)
  */
 function setGlobal($varname, $value, $no_linked = 0, $source = '')
 {
+    $varname = trim($varname);
     $tmp = explode('.', $varname);
 
     if (isset($tmp[2])) {
@@ -923,13 +925,16 @@ function setGlobal($varname, $value, $no_linked = 0, $source = '')
     } else {
         $object_name = 'ThisComputer';
     }
-
+    //$cached_value = checkFromCache('MJD:' . $object_name . '.' . $varname);
+    //if ($cached_value === $value) {
+    //    return true;
+    //}
     $obj = getObject($object_name);
 
     if ($obj) {
         return $obj->setProperty($varname, $value, $no_linked, $source);
     } else {
-        return 0;
+        return false;
     }
 }
 
