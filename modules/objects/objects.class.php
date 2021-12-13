@@ -780,10 +780,11 @@ class objects extends module
         startMeasure('setProperty (' . $property . ')');
 
         $property = trim($property);
-
-        if (is_null($value)) {
-            $value = '';
-        }
+        $value = strval($value);
+        //$cached_value = checkFromCache('MJD:' . $this->object_title . '.' . $property);
+        //if ($cached_value === $value) {
+        //    return true;
+        //}
 
         if (!$source && is_string($no_linked)) {
             $source = $no_linked;
@@ -873,8 +874,19 @@ class objects extends module
         } 
 		
 		// фильтрование свойств
-		if (defined('SETTINGS_SYSTEMFILTER_PROPERTY') and (SETTINGS_SYSTEMFILTER_PROPERTY == 1 )) {
-			if ($old_value !== $value) {
+		if (defined('SETTINGS_SYSTEMFILTER_PROPERTY') and SETTINGS_SYSTEMFILTER_PROPERTY ) {
+			if ($value !== $old_value) {
+			    /*
+			    if ($this->object_title == 'Zigbymotion01') {
+    			    DebMes('old v!= new v');
+            		DebMes('def ssp'.defined('SETTINGS_SYSTEMFILTER_PROPERTY'));
+            		DebMes('def sspv'.SETTINGS_SYSTEMFILTER_PROPERTY);
+            		DebMes('old v'.$old_value);
+            		DebMes('type old v'.gettype($old_value));
+            		DebMes('new v'.$value);
+            		DebMes('type new v'.gettype($value));
+			    }
+			    */
 				if (!$v['ID']) {
 					$v = array();
 					$v['PROPERTY_ID'] = $id;
@@ -950,7 +962,7 @@ class objects extends module
         }
 		
 		// фильтрование истории
-		if (defined('SETTINGS_SYSTEMFILTER_HYSTORY') and (SETTINGS_SYSTEMFILTER_HYSTORY == 1 )) {
+		if (defined('SETTINGS_SYSTEMFILTER_HYSTORY') and SETTINGS_SYSTEMFILTER_HYSTORY) {
 			if ($old_value !== $value) {
 				startMeasure('save_to_phistory');
 				if (IsSet($prop['KEEP_HISTORY']) && ($prop['KEEP_HISTORY'] > 0)) {
@@ -979,7 +991,7 @@ class objects extends module
 		}
 
 		// фильтрование кеша
-		if (defined('SETTINGS_SYSTEMFILTER_CACHE') and SETTINGS_SYSTEMFILTER_CACHE == 1) {
+		if (defined('SETTINGS_SYSTEMFILTER_CACHE') and SETTINGS_SYSTEMFILTER_CACHE) {
 			if ($old_value !== $value) {
 				startMeasure('save_to_cache');
 				$cached_name = 'MJD:' . $this->object_title . '.' . $property;
@@ -994,7 +1006,7 @@ class objects extends module
 		}
 		
 		// фильтрование передачи данных в вебсокеты
-		if (defined('SETTINGS_SYSTEMFILTER_WEBSOCKET') and (SETTINGS_SYSTEMFILTER_WEBSOCKET == 1)) {
+		if (defined('SETTINGS_SYSTEMFILTER_WEBSOCKET') and SETTINGS_SYSTEMFILTER_WEBSOCKET) {
 			if ($old_value !== $value) {
 				startMeasure('setproperty_postwebsocketqueue');
 				postToWebSocket($this->object_title . '.' . $property, $value);
@@ -1027,7 +1039,7 @@ class objects extends module
 
         endMeasure('setProperty (' . $property . ')', 1);
         endMeasure('setProperty', 1);
-
+        return true;
     }
 
     function getWatchedProperties($objects)
