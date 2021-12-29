@@ -148,7 +148,7 @@ while (1)
                 }
             }
             sg($zigbydevices[$out['sid']]['name'].'.activity', 1, 0, 'cycle sdevice');
-        } elseif (isset ($data["no_close"])) {
+        /*} elseif (isset ($data["no_close"])) {
             //{"no_close":"300"}
             if (!$zigbydevices[$out['sid']]) {
                 if ($device = getObjectsByProperty('sid', '==', $out['sid'])) {
@@ -159,14 +159,32 @@ while (1)
                 }
             }
             //sg($zigbydevices[$out['sid']]['name'].'.activity', 1, 0, 'cycle sdevice');
-        } elseif ($device = getObjectsByProperty('sid', '==', $out['sid'])) {
-            sg($device[0].'.allproperties', $out['data'], 0, 'cycle sdevice');
-            DebMes($device[0] . ' set buf '.$out['data']);
+        */
+        } elseif (isset($data["alarm"]) and $data["alarm"]==1) {
+            //"alarm":"1"
+            if (!$zigbydevices[$out['sid']]) {
+                if ($device = getObjectsByProperty('sid', '==', $out['sid'])) {
+                    $zigbydevices[$out['sid']]['name'] = $device[0];                    
+                } else {
+                    DebMes('Founded zigby device with sid '. $out['sid'] . ' model-' . $out['model'] . ' data-' . $out['data']);
+                    continue;
+                }
+            }
+            sg($zigbydevices[$out['sid']]['name'].'.activity', 1, 0, 'cycle sdevice');
+        } elseif (isset($data["alarm"]) and $data["alarm"]==0) {
+            //"alarm":"0"
+            if (!$zigbydevices[$out['sid']]) {
+                if ($device = getObjectsByProperty('sid', '==', $out['sid'])) {
+                    $zigbydevices[$out['sid']]['name'] = $device[0];                    
+                } else {
+                    DebMes('Founded zigby device with sid '. $out['sid'] . ' model-' . $out['model'] . ' data-' . $out['data']);
+                    continue;
+                }
+            }
+            sg($zigbydevices[$out['sid']]['name'].'.activity', 0, 0, 'cycle sdevice');
         } else {
             DebMes('Founded zigby device with sid '. $out['sid'] . ' model-' . $out['model'] . ' data-' . $out['data']);
         }
-        //$data = json_decode($out, true);
-        //DebMes('array - ' . serialize($out));
     }
     /// end
 }
