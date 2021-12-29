@@ -20,7 +20,7 @@ if (!socket_bind($sock, XIAOMI_MULTICAST_ADDRESS, XIAOMI_MULTICAST_PORT)) {
 }
 
 socket_set_option($sock, SOL_SOCKET, SO_BROADCAST, 1);
-socket_set_option($sock, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => 0));
+socket_set_option($sock, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 3, 'usec' => 0));
 socket_set_option($sock, IPPROTO_IP, IP_MULTICAST_LOOP, true);
 socket_set_option($sock, IPPROTO_IP, IP_MULTICAST_TTL, 32);
 socket_set_option($sock, IPPROTO_IP, MCAST_JOIN_GROUP, array('group' => XIAOMI_MULTICAST_ADDRESS, 'interface' => 0, 'source' => 0));
@@ -29,17 +29,29 @@ socket_sendto($sock, $message, strlen($message), 0, $this->getProperty('Gateip')
 @$r = socket_recvfrom($sock, $buf, 1024, 0, $remote_ip, $remote_port);
 
 //DebMes('send commans');
-//DebMes('buf - ' . $buf);
+//DebMes('гзые buf - ' . $buf);
 socket_close($sock);
 
 if( $buf == '') {
-    $this->setProperty('alive',0);
+    DebMes('Возможно указан неверный айпи адрес шлюза, или шлюз недоступен!!! Устройство - ' . $this->description );
+    //$this->setProperty('alive',0);
 } else {
     $out = json_decode($buf, true);
+    //DebMes('Data ' . $out["data"]);
     if ($out["cmd"] == 'read_ack' and $out["sid"] == $sid) {
-        $this->setProperty('allproperties', $out["data"]);
+        //$this->setProperty('allproperties', $out["data"]);
+        $data = json_decode($out["data"], true);
+        if (isset ($data["voltage"])) {
+            $this->setProperty('alive',1);
+        }
+        // /DebMes($data);
+        if ($data['error'] == "No device") {
+            $this->setProperty('alive',0);
+            DebMes('no device');
+        } elseif (isset($data["alarm"]) and $data["alarm"]==1) {
+            $this->setProperty('activity', 1);
+        } elseif (isset($data["alarm"]) and $data["alarm"]==0) {
+            $this->setProperty('activity', 0);
+        }
     }
 }
-
-// надо решить єтот нюанс
-//{"cmd":"read_ack","sid":"158d0002c7df91","data":"{\"error\":\"No device\"}"}

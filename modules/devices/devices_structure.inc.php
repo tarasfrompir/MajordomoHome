@@ -24,8 +24,8 @@ $this->device_types=array(
             'volt'=>array('DESCRIPTION'=>'Напряжение','KEEP_HISTORY'=>30),
             'light'=>array('DESCRIPTION'=>'Освещенность','KEEP_HISTORY'=>30),
             'opened'=>array('DESCRIPTION'=>'Состояние открытости комнаты','KEEP_HISTORY'=>30),
-            'EconomMode'=>array('DESCRIPTION'=>'Режим економии в помещении'),
-            //'SomebodyHere'=>array('DESCRIPTION'=>'Somebody in the room'),
+            'EconomMode'=>array('DESCRIPTION'=>'Режим економии в помещении','KEEP_HISTORY'=>30),
+            'SomebodyHere'=>array('DESCRIPTION'=>'Наличие кого либо в помещении','KEEP_HISTORY'=>30),
             //'IdleDelay'=>array('DESCRIPTION'=>'Nobody here idle delay'),
         ),
         'METHODS'=>array(

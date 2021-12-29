@@ -1,12 +1,21 @@
 <?php
-DebMes($params);
-DebMes($this);
-//$this->setProperty('alive',1);
-//if ($params["NEW_VALUE"] == $params["OLD_VALUE"]) return;
+//DebMes($params);
+//DebMes($this->object_title.'.isActivity');
+//DebMes($this->location_title.'.SomebodyHere');
+
+
 $this->setProperty('updated',time());
 
+//$this->setProperty('alive',1);
+if ($params["NEW_VALUE"] == 1 and gg($this->object_title.'.isActivity')) {
+    sg($this->location_title.'.SomebodyHere', 1);
+} elseif ($params["NEW_VALUE"] == 0 and gg($this->object_title.'.isActivity')) {
+    sg($this->location_title.'.SomebodyHere', 0);
+}
+
+
 /*
-12:33:55 0.70614000 {
+15:06:09 0.39333000 {
 "xml": null,
 "data_source": null,
 "view_mode": null,
@@ -30,6 +39,7 @@ $this->setProperty('updated',time());
 "class_title": "SZigbymotion",
 "description": "\u0414\u0430\u0442\u0447\u0438\u043a \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u044f \u0433\u043e\u0441\u0442\u0438\u043d\u043d\u0430\u044f",
 "location_id": "8",
+"location_title": "Gostinaya",
 "linked_user": "",
 "device_id": "1"
 }
