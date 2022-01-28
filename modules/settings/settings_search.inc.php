@@ -21,7 +21,7 @@ if ($clear_codeeditor) {
 
 
 $sections = array();
-$filters = array('', 'system', 'systemfilter', 'behavior', 'hook', 'backup', 'scenes', 'calendar', 'codeeditor');
+$filters = array('', 'system', 'extended', 'behavior', 'hook', 'backup', 'scenes', 'calendar', 'codeeditor');
 $total = count($filters);
 for ($i = 0; $i < $total; $i++) {
     $rec = array();
@@ -173,36 +173,43 @@ if ($this->filter_name == 'behavior' ) {
 
 }
 
-if ($this->filter_name == 'systemfilter' ) {
+if ($this->filter_name == 'extended' ) {
 
     $options = array(
-	'SYSTEMFILTER_PROPERTY' => array(
+	'EXTENDED_PROPERTY' => array(
             'TITLE' => 'Filtering Objects property',
 			'TYPE' => 'onoff',
             'DEFAULTVALUE' => 1,
 			'VALUE' => 1,
             'NOTES' => 'Фильтрование входящих данных от устройств в свойстве Обьектов'
         ),
-	'SYSTEMFILTER_HYSTORY' => array(
+	'EXTENDED_HYSTORY' => array(
             'TITLE' => 'Filtering hystory Objects property',
 			'TYPE' => 'onoff',
             'DEFAULTVALUE' => 1,
 			'VALUE' => 1,
             'NOTES' => 'Фильтрование исторических значений в свойстве Обьектов. Если отключено то история идет через очередь истории.',
         ),
-		'SYSTEMFILTER_CACHE' => array(
+	'EXTENDED_CACHE' => array(
             'TITLE' => 'Filtering Objects property in cache',
 			'TYPE' => 'onoff',
             'DEFAULTVALUE' => 1,
 			'VALUE' => 1,
             'NOTES' => 'Фильтрование входящих данных от устройств в свойстве Обьектов при записи данных в кеш'
         ),
-		'SYSTEMFILTER_WEBSOCKET' => array(
+	'EXTENDED_WEBSOCKET' => array(
             'TITLE' => 'Filtering Objects property when post to websocket',
 			'TYPE' => 'onoff',
             'DEFAULTVALUE' => 1,
 			'VALUE' => 1,
             'NOTES' => 'Фильтрование входящих данных от устройств в свойстве Обьектов при передачи данных в Вебсокеты'
+        ),
+    'EXTENDED_TIMEMAINTANCE' => array(
+            'TITLE' => 'Time to system maintance',
+			'TYPE' => 'text',
+            'DEFAULTVALUE' => '11:00',
+			'VALUE' => '11:00',
+            'NOTES' => 'Время запуска обслуживания системы.'
         ),
     );
 
