@@ -1188,9 +1188,14 @@ $dictionary = array(
     'DEVICES_MOTION_IGNORE' => 'Игнорировать события от устройства, когда никого нет дома',
     'DEVICES_MOTION_RESET' => 'Сброс статуса "никого нет дома" без таймера установки',
     'DEVICES_MOTION_TIMEOUT' => 'Время активности (секунд)',
+    'DEVICES_TURNOFF_LIGHTS_ON_IDLE' => 'Выключать освещение в комнате по истечение периода активности',
     'DEVICES_ALIVE_TIMEOUT' => 'Допустимое время отсутствия данных (часов)',
     'DEVICES_MAIN_SENSOR' => 'Основной сенсор помещения',
     'DEVICES_NOT_UPDATING' => 'не обновляется',
+    'DEVICES_BATTERY_OPERATED' => 'Устройство работает от батареи',
+    'DEVICES_BATTERY_LEVEL' => 'Уровень заряда батареи',
+    'DEVICES_BATTERY_WARNING' => 'Предупреждение о низком заряде батареи',
+    'DEVICES_LOW_BATTERY' => 'низкий уровень заряда',
 
     'DEVICES_IS_ON' => 'Включено',
     'DEVICES_IS_CLOSED' => 'Закрыто',
@@ -1253,6 +1258,13 @@ $dictionary = array(
     'DEVICES_LINK_SET_COLOR' => 'Установить цвет',
     'DEVICES_LINK_SET_COLOR_DESCRIPTION' => 'Установить цвет по событию',
     'DEVICES_LINK_SET_COLOR_PARAM_ACTION_COLOR' => 'Цвет',
+
+    'DEVICES_LINK_SENSOR_VALUE_TYPE' => 'Исходное значение',
+    'DEVICES_LINK_SENSOR_VALUE_TYPE_CURRENT' => 'Текущее значение сенсора',
+    'DEVICES_LINK_SENSOR_VALUE_TYPE_MIN' => 'Минимальное значение за период',
+    'DEVICES_LINK_SENSOR_VALUE_TYPE_AVG' => 'Среднее значение за период',
+    'DEVICES_LINK_SENSOR_VALUE_TYPE_MAX' => 'Максимальное значение за период',
+    'DEVICES_LINK_SENSOR_VALUE_FOR_PERIOD' => 'Использовать период',
 
     'DEVICES_LINK_SENSOR_SWITCH' => 'Условное управление',
     'DEVICES_LINK_SENSOR_SWITCH_DESCRIPTION' => 'Управление другим устройством по показаниям датчика',
@@ -1328,6 +1340,7 @@ $dictionary = array(
     'DEVICES_THERMOSTAT_CURRENT_TARGET_TEMP' => 'Целевая температура',
     'DEVICES_THERMOSTAT_THRESHOLD' => 'Порог срабатывания термостата (0.25 по-умолчанию)',
     'DEVICES_THERMOSTAT_RELAY_STATUS' => 'Статус реле',
+    'DEVICES_THERMOSTAT_SET_TARGET_TEMPERATURE' => 'Установить желаемую температуру',
     'DEVICES_ALL_BY_TYPE' => 'Все по типам',
     'DEVICES_ALL_BY_ROOM' => 'Все по комнатам',
     'DEVICES_LOAD_TIMEOUT'=>'Таймер изменения статуса нагрузки',
@@ -1356,6 +1369,28 @@ $dictionary = array(
     'DEVICES_COLLECTION_IS_ON' => 'Сейчас включено',
     'DEVICES_COLLECTION_IS_OPEN' => 'Сейчас открыто',
     'DEVICES_COLLECTION_IS_HEATING' => 'Сейчас греет',
+
+    'WIDGET' => 'Виджет',
+    'WIDGETS' => 'Виджеты',
+    'ADD_WIDGET' => 'Добавить виджет',
+
+    'WIDGET_TEXT_BLOCK' => 'Текстовый блок',
+    'WIDGET_TEXT_BLOCK_DESCRIPTION' => 'Виджет позволяет добавить блок текста',
+    'WIDGET_TEXT_BLOCK_VALUE' => 'Текст',
+    'WIDGET_TEXT_BLOCK_DEFAULT_VALUE' => 'Привет, мир!',
+    'WIDGET_TEXT_BLOCK_SIZE' => 'Размер текста (pt)',
+    'WIDGET_TEXT_ALIGNMENT' => 'Выравнивание текста',
+    'WIDGET_TEXT_ALIGNMENT_LEFT' => 'По левому краю',
+    'WIDGET_TEXT_ALIGNMENT_CENTER' => 'По центру',
+    'WIDGET_TEXT_ALIGNMENT_RIGHT' => 'По правому краю',
+    'WIDGET_TEXT_BLOCK_COLOR' => 'Цвет текста',
+    'WIDGET_TEXT_BLOCK_BACKGROUND_COLOR' => 'Цвет фона',
+    'WIDGET_TEXT_BLOCK_BACKGROUND_OPACITY' => 'Степень прозрачности фона, %',
+
+    'WIDGET_IMAGE_BLOCK' => 'Изображение',
+    'WIDGET_IMAGE_BLOCK_DESCRIPTION' => 'Виджет позволяет добавить изображение',
+    'WIDGET_IMAGE_URL' => 'Ссылка на изображение (URL)',
+    'WIDGET_IMAGE_REFRESH_INTERVAL' => 'Период обновления, секунд',
 
     'AUTO_LINK' => 'Автоматический запуск сценария',
     'FAVORITE_DEVICE' => 'В списке быстрого доступа',
@@ -1392,7 +1427,7 @@ $dictionary = array(
     'THEME_LIGHT' => 'Светлая',
 
     'DATA_SOURCE' => 'Источник данных',
-    'WIDGET' => 'Виджет',
+
     'PANE' => 'Панель',
     'COLUMNS' => 'Колонки',
     'SIZE' => 'Размер',
@@ -1508,6 +1543,7 @@ $dictionary = array(
 	'NEWDASH_DISCONNECTED' => 'Нет подключения',
 	'NEWDASH_MJDM_RESOURCE' => 'Ресурсы MJDM',
 	'NEWDASH_FORUM' => 'Форум',
+    'NEWDASH_FORUM_DISCUSSION' => 'Обсуждение на форуме',
 	'NEWDASH_CHAT_TELEGRAM' => 'Чаты Telegram',
 	'NEWDASH_CHAT_TELEGRAM_MAIN' => 'Общий чат (RUS)',
 	'NEWDASH_CHAT_TELEGRAM_SMOKE' => 'Курилка (RUS)',
@@ -1566,6 +1602,7 @@ $dictionary = array(
 	
 	'NEWDASH_OBJ_ADD_NEW_PROP_NAME' => 'Имя для нового свойства',
 	'NEWDASH_OBJ_ADD_NEW_PROP_VALUE' => 'Значение свойства',
+    'NEWDASH_RESET_VISIBILITY' => 'Сбросить настройки видимости блоков',
 	
 	'NEWSAVERESTORE_NONE_UPDATE_HEADER' => 'Все хорошо!',
 	'NEWSAVERESTORE_NONE_UPDATE_TEXT' => 'Классно, что вы вовремя обновляетесь. Сейчас у вас последняя доступная версия системы. Но в случае необходимости, вы можете перекачать файлы из репозитория GitHub.',

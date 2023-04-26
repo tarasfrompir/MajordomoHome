@@ -440,4 +440,3 @@ function closeThread($process = null, $cycle_name = '') {
     sleep(1);
     return True;
 }
-

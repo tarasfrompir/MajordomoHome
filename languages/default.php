@@ -1115,7 +1115,7 @@ $dictionary = array(
 
     'MODULES_UPDATES_AVAILABLE' => 'Modules updates available',
     'SYSTEM_UPDATES_AVAILABLE' => 'System updates available',
-    'ERRORS_SAVED' => 'Errors saved',
+    'ERRORS_SAVED' => 'Errors detected',
 
 // DEVICES
     'DEVICES_MODULE_TITLE' => 'Simple Devices',
@@ -1192,8 +1192,13 @@ $dictionary = array(
     'DEVICES_MOTION_IGNORE' => 'Ignore device events when nobody\'s home',
     'DEVICES_MOTION_RESET' => 'Reset "nobody home" status w/o setting timer',
     'DEVICES_MOTION_TIMEOUT' => 'Activity timeout (sec)',
+    'DEVICES_TURNOFF_LIGHTS_ON_IDLE' => 'Turn off lights in the room on idle',
     'DEVICES_ALIVE_TIMEOUT' => 'Possible inactivity timeout (hours)',
     'DEVICES_MAIN_SENSOR' => 'Main sensor for the room',
+    'DEVICES_BATTERY_OPERATED' => 'Device is battery operated',
+    'DEVICES_BATTERY_LEVEL' => 'Battery level',
+    'DEVICES_BATTERY_WARNING' => 'Low battery warning',
+    'DEVICES_LOW_BATTERY' => 'low battery level',
 
     'DEVICES_IS_ON' => 'is ON',
     'DEVICES_IS_CLOSED' => 'is Closed',
@@ -1258,6 +1263,12 @@ $dictionary = array(
     'DEVICES_LINK_SET_COLOR_DESCRIPTION' => 'Change color when action triggered',
     'DEVICES_LINK_SET_COLOR_PARAM_ACTION_COLOR' => 'Color',
 
+    'DEVICES_LINK_SENSOR_VALUE_TYPE' => 'Source value',
+    'DEVICES_LINK_SENSOR_VALUE_TYPE_CURRENT' => 'Current sensor value',
+    'DEVICES_LINK_SENSOR_VALUE_TYPE_MIN' => 'Minimum sensor value for period',
+    'DEVICES_LINK_SENSOR_VALUE_TYPE_AVG' => 'Average sensor value for period',
+    'DEVICES_LINK_SENSOR_VALUE_TYPE_MAX' => 'Maximum sensor value for period',
+    'DEVICES_LINK_SENSOR_VALUE_FOR_PERIOD' => 'For period',
 
     'DEVICES_LINK_SENSOR_SWITCH' => 'Sensor control',
     'DEVICES_LINK_SENSOR_SWITCH_DESCRIPTION' => 'Control another devices based on sensor\'s value',
@@ -1331,6 +1342,7 @@ $dictionary = array(
     'DEVICES_THERMOSTAT_CURRENT_TARGET_TEMP' => 'Current target temperature',
     'DEVICES_THERMOSTAT_THRESHOLD' => 'Temperature threshold (0.25 by default)',
     'DEVICES_THERMOSTAT_RELAY_STATUS' => 'Relay status',
+    'DEVICES_THERMOSTAT_SET_TARGET_TEMPERATURE' => 'Set target temperature',
     'DEVICES_ALL_BY_TYPE' => 'List all by types',
     'DEVICES_ALL_BY_ROOM' => 'List all by rooms',
     'DEVICES_LOAD_TIMEOUT' => 'Load status timeout',
@@ -1360,6 +1372,28 @@ $dictionary = array(
 
     'GROUPS' => 'Groups',
     'APPLIES_TO' => 'Applies to',
+
+    'WIDGET' => 'Widget',
+    'WIDGETS' => 'Widgets',
+    'ADD_WIDGET' => 'Add widget',
+
+    'WIDGET_TEXT_BLOCK' => 'Text block',
+    'WIDGET_TEXT_BLOCK_DESCRIPTION' => 'This widget allows you to add text block',
+    'WIDGET_TEXT_BLOCK_VALUE' => 'Text block',
+    'WIDGET_TEXT_BLOCK_DEFAULT_VALUE' => 'Hello, world!',
+    'WIDGET_TEXT_BLOCK_SIZE' => 'Text size (pt)',
+    'WIDGET_TEXT_ALIGNMENT' => 'Text alignment',
+    'WIDGET_TEXT_ALIGNMENT_LEFT' => 'Left',
+    'WIDGET_TEXT_ALIGNMENT_CENTER' => 'Center',
+    'WIDGET_TEXT_ALIGNMENT_RIGHT' => 'Right',
+    'WIDGET_TEXT_BLOCK_COLOR' => 'Color',
+    'WIDGET_TEXT_BLOCK_BACKGROUND_COLOR' => 'Background color',
+    'WIDGET_TEXT_BLOCK_BACKGROUND_OPACITY' => 'Background opacity, %',
+
+    'WIDGET_IMAGE_BLOCK' => 'Image block',
+    'WIDGET_IMAGE_BLOCK_DESCRIPTION' => 'This widget allows you to add image by URL',
+    'WIDGET_IMAGE_URL' => 'Image URL',
+    'WIDGET_IMAGE_REFRESH_INTERVAL' => 'Refresh interval, seconds',
 
     'AUTO_LINK' => 'Execute script automatically',
     'FAVORITE_DEVICE' => 'Favorite device',
@@ -1393,7 +1427,6 @@ $dictionary = array(
     'THEME_DARK' => 'Dark',
     'THEME_LIGHT' => 'Light',
     'DATA_SOURCE' => 'Data source',
-    'WIDGET' => 'Widget',
     'PANE' => 'Pane',
     'COLUMNS' => 'Columns',
     'SIZE' => 'Size',
@@ -1509,6 +1542,7 @@ $dictionary = array(
 	'NEWDASH_DISCONNECTED' => 'No connection',
 	'NEWDASH_MJDM_RESOURCE' => 'MJDM Resources',
 	'NEWDASH_FORUM' => 'Forum',
+    'NEWDASH_FORUM_DISCUSSION' => 'Discuss on forum',
 	'NEWDASH_CHAT_TELEGRAM' => 'Telegram chats',
 	'NEWDASH_CHAT_TELEGRAM_MAIN' => 'General chat (RUS)',
 	'NEWDASH_CHAT_TELEGRAM_SMOKE' => 'Smoking room (RUS)',
@@ -1534,7 +1568,7 @@ $dictionary = array(
 	'NEWDASH_CLASS' => 'Class',
 	'NEWDASH_NEWS' => 'MajorDomo News and Blogs',
 	'NEWDASH_NEWS_MORE' => 'more entries',
-	'NEWDASH_DONTSHOW_THIS_BLOCK' => 'Don\'t show this block again',
+	'NEWDASH_DONTSHOW_THIS_BLOCK' => 'Hide this block',
 	'NEWDASH_HIDE_MENU_HINT' => 'This menu can be moved to the top, shall we try? <br> To return back press',
 	'NEWDASH_PRELOAD_HEADER' => 'Loading content ...',
 	'NEWDASH_PRELOAD_TEXT' => 'If the download is too long, there may be an error in the code or the script is performing the requested operation.',
@@ -1567,9 +1601,10 @@ $dictionary = array(
 	
 	'NEWDASH_OBJ_ADD_NEW_PROP_NAME' => 'Name for new propertie',
 	'NEWDASH_OBJ_ADD_NEW_PROP_VALUE' => 'Property value',
+    'NEWDASH_RESET_VISIBILITY' => 'Reset blocks visibility settings',
 	
-	'NEWSAVERESTORE_NONE_UPDATE_HEADER' => 'It\'s okay!',
-	'NEWSAVERESTORE_NONE_UPDATE_TEXT' => 'It\'s great that you update on time. You now have the latest available version of the system. But if necessary, you can download files from the GitHub repository. ',
+	'NEWSAVERESTORE_NONE_UPDATE_HEADER' => 'It\'s OK!',
+	'NEWSAVERESTORE_NONE_UPDATE_TEXT' => 'It\'s great that you update on time. Now you have the latest available version installed. You can download files from the GitHub repository in case you need it :) ',
 	'NEWSAVERESTORE_NONE_UPDATE_BTN' => 'Update anyway',
 	'NEWSAVERESTORE_UPDATE_HEADER' => 'Update time!',
 	'NEWSAVERESTORE_UPDATE_TEXT' => 'Try to keep your system up to date to avoid bugs and security issues. Every day, the developers make changes to ensure you get the most out of MajorDoMo. ',
